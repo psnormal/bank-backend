@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 25.0.1705.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "credit-service", "credit-service\credit-service.csproj", "{F8F526E6-5F91-40C2-A5E7-BD2F432153E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "credit-service", "credit-service\credit-service.csproj", "{FFCC7556-C672-42A0-8F6F-4DE31315AA79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F8F526E6-5F91-40C2-A5E7-BD2F432153E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8F526E6-5F91-40C2-A5E7-BD2F432153E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8F526E6-5F91-40C2-A5E7-BD2F432153E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8F526E6-5F91-40C2-A5E7-BD2F432153E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFCC7556-C672-42A0-8F6F-4DE31315AA79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFCC7556-C672-42A0-8F6F-4DE31315AA79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFCC7556-C672-42A0-8F6F-4DE31315AA79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFCC7556-C672-42A0-8F6F-4DE31315AA79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {67709069-ECFF-4177-B767-EFFDE770659A}
+		SolutionGuid = {EA74C4A5-4DCA-4308-ACC1-845D9AB8C894}
 	EndGlobalSection
 EndGlobal
