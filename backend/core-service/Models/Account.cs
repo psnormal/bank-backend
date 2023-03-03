@@ -4,11 +4,11 @@ namespace core_service.Models
 {
     public class Account
     {
+        [Required]
         public Guid UserID { get; set; }
         [Required]
-        [StringLength(10, MinimumLength = 10)]
         [Key]
-        public string AccountNumber { get; set; }
+        public int AccountNumber { get; set; }
         [Required]
         public decimal Balance { get; set; }
         [Required]

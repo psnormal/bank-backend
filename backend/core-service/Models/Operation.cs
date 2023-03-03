@@ -6,12 +6,12 @@ namespace core_service.Models
 {
     public class Operation
     {
+        [Required]
         public Guid Id { get; set; }
         public Account Account { get; set; }
         [Required]
-        [StringLength(10, MinimumLength = 10)]
         [ForeignKey("Account")]
-        public string AccountNumber { get; set; }
+        public int AccountNumber { get; set; }
         [Required]
         public DateTime DateTime { get; set; }
         [Required]
