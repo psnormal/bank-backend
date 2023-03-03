@@ -28,7 +28,7 @@ namespace core_service.Services
             return newModel.AccountNumber;
         }
 
-        public InfoAccountDTO GetInfoAccount(Guid UserID, int accountNumber)
+        public DetailInfoAccount GetInfoAccount(Guid UserID, int accountNumber)
         {
             var infoAccount = _context.Accounts.FirstOrDefault(x => x.UserID == UserID && x.AccountNumber == accountNumber);
 
@@ -37,7 +37,45 @@ namespace core_service.Services
                 throw new ValidationException("This account does not exist");
             }
 
-            return new InfoAccountDTO(infoAccount);
+            List<Operation> operations = _context.Operations.Where(x => x.AccountNumber == accountNumber).ToList();
+            List<InfoOperationDTO> infoOperations = new List<InfoOperationDTO>();
+            foreach (Operation operation in operations)
+            {
+                InfoOperationDTO currentOperation = new InfoOperationDTO(operation);
+                infoOperations.Add(currentOperation);
+            }
+            DetailInfoAccount result = new DetailInfoAccount(infoAccount)
+            {
+                Operations = infoOperations
+            };
+            return result;
+        }
+
+        public async Task EditAccount(Guid UserID, int accountNumber, AccountState accountState)
+        {
+            var infoAccount = _context.Accounts.FirstOrDefault(x => x.UserID == UserID && x.AccountNumber == accountNumber);
+
+            if (infoAccount == null)
+            {
+                throw new ValidationException("This account does not exist");
+            }
+
+            infoAccount.State = accountState;
+            await _context.SaveChangesAsync();
+        }
+
+        public InfoAccountsDTO GetAllUserAccounts(Guid UserID)
+        {
+            List<Account> accounts = _context.Accounts.Where(x => x.UserID == UserID).ToList();
+            List<InfoAccountDTO> result = new List<InfoAccountDTO>();
+            foreach (var account in accounts)
+            {
+                InfoAccountDTO currentAccount = new InfoAccountDTO(account);
+                result.Add(currentAccount);
+            }
+
+            InfoAccountsDTO allAccounts = new InfoAccountsDTO(result);
+            return allAccounts;
         }
     }
 }

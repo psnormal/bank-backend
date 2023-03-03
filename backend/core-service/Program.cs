@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 
 //Services
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IOperationService, OperationService>();
 
 //DB connection:
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");

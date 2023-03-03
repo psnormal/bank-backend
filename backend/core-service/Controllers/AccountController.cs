@@ -1,5 +1,6 @@
 ﻿using core_service.DTO;
 using core_service.Services;
+using core_service.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace core_service.Controllers
@@ -17,7 +18,7 @@ namespace core_service.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<ActionResult<InfoAccountDTO>> CreateAccount(CreateAccountDTO model)
+        public async Task<ActionResult<DetailInfoAccount>> CreateAccount(CreateAccountDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +38,7 @@ namespace core_service.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<InfoAccountDTO> GetAccount(Guid UserID, int id)
+        public ActionResult<DetailInfoAccount> GetAccount(Guid UserID, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -54,6 +55,45 @@ namespace core_service.Controllers
                 {
                     return StatusCode(400, ex.Message);
                 }
+                return StatusCode(500, "Something went wrong");
+            }
+        }
+
+        [HttpPut]
+        [Route("{id}/edit")]
+        public async Task<ActionResult<DetailInfoAccount>> EditAccount(Guid UserID, int id, AccountState accountState)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                await _accountService.EditAccount(UserID, id, accountState);
+                return GetAccount(UserID, id);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Something went wrong");
+            }
+        }
+
+        [HttpGet]
+        [Route("all")]
+        public ActionResult<InfoAccountsDTO> GetAllUserAccounts(Guid UserID)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return _accountService.GetAllUserAccounts(UserID);
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, "Something went wrong");
             }
         }
