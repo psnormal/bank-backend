@@ -22,6 +22,16 @@ namespace core_service.Services
                 throw new ValidationException("This account does not exist");
             }
 
+            if (infoAccount.State == AccountState.Closed)
+            {
+                throw new ValidationException("This account is closed");
+            }
+
+            if ((infoAccount.Balance + model.TransactionAmount) < 0)
+            {
+                throw new ValidationException("Not enough money");
+            }
+
             var newModel = new Operation
             {
                 AccountNumber = model.AccountNumber,
@@ -50,7 +60,7 @@ namespace core_service.Services
 
         public InfoOperationsDTO GetOperations(Guid UserID, int accountNumber, int page)
         {
-            int pageSize = 2;
+            int pageSize = 5;
             var infoAccount = _context.Accounts.FirstOrDefault(x => x.UserID == UserID && x.AccountNumber == accountNumber);
 
             if (infoAccount == null)

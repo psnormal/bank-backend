@@ -35,6 +35,14 @@ namespace core_service.Controllers
                 {
                     return StatusCode(400, ex.Message);
                 }
+                if (ex.Message == "This account is closed")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                if (ex.Message == "Not enough money")
+                {
+                    return StatusCode(400, ex.Message);
+                }
                 return StatusCode(500, "Something went wrong");
             }
         }
