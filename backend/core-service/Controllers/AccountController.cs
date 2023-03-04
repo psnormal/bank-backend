@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace core_service.Controllers
 {
-    [Route("api/account")]
+    [Route("api")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -17,8 +17,8 @@ namespace core_service.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
-        public async Task<ActionResult<DetailInfoAccount>> CreateAccount(CreateAccountDTO model)
+        [Route("account/create")]
+        public async Task<ActionResult<InfoAccountDTO>> CreateAccount(CreateAccountDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -37,8 +37,8 @@ namespace core_service.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public ActionResult<DetailInfoAccount> GetAccount(Guid UserID, int id)
+        [Route("account/{id}")]
+        public ActionResult<InfoAccountDTO> GetAccount(Guid UserID, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -60,8 +60,8 @@ namespace core_service.Controllers
         }
 
         [HttpPut]
-        [Route("{id}/edit")]
-        public async Task<ActionResult<DetailInfoAccount>> EditAccount(Guid UserID, int id, AccountState accountState)
+        [Route("account/{id}/edit")]
+        public async Task<ActionResult<InfoAccountDTO>> EditAccount(Guid UserID, int id, AccountState accountState)
         {
             if (!ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace core_service.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
+        [Route("accounts/all")]
         public ActionResult<InfoAccountsDTO> GetAllUserAccounts(Guid UserID)
         {
             if (!ModelState.IsValid)

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace core_service.Controllers
 {
-    [Route("api/operation")]
+    [Route("api")]
     [ApiController]
     public class OperationController : ControllerBase
     {
@@ -16,8 +16,8 @@ namespace core_service.Controllers
         }
 
         [HttpPost]
-        [Route("create")]
-        public async Task<ActionResult<InfoAccountDTO>> CreateOperation(CreateOperationDTO model)
+        [Route("operation/create")]
+        public async Task<IActionResult> CreateOperation(CreateOperationDTO model)
         {
             if (!ModelState.IsValid)
             {
@@ -32,6 +32,33 @@ namespace core_service.Controllers
             catch (Exception ex)
             {
                 if (ex.Message == "This account does not exist")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                return StatusCode(500, "Something went wrong");
+            }
+        }
+
+        [HttpGet]
+        [Route("account/{id}/operations/{page}")]
+        public ActionResult<InfoOperationsDTO> GetOperations(Guid UserID, int id, int page)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                return _operationService.GetOperations(UserID, id, page);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "This account does not exist")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                if (ex.Message == "This page does not exist")
                 {
                     return StatusCode(400, ex.Message);
                 }

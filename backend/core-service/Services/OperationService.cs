@@ -47,5 +47,45 @@ namespace core_service.Services
             infoAccount.Balance += model.TransactionAmount;
             await _context.SaveChangesAsync();
         }
+
+        public InfoOperationsDTO GetOperations(Guid UserID, int accountNumber, int page)
+        {
+            int pageSize = 2;
+            var infoAccount = _context.Accounts.FirstOrDefault(x => x.UserID == UserID && x.AccountNumber == accountNumber);
+
+            if (infoAccount == null)
+            {
+                throw new ValidationException("This account does not exist");
+            }
+
+            List<Operation> operations = _context.Operations.Where(x => x.AccountNumber == accountNumber).ToList();
+
+            var count = operations.Count() / pageSize;
+            if (operations.Count() % pageSize != 0) count++;
+            if (page > count)
+            {
+                throw new ValidationException("This page does not exist");
+            }
+
+            var someOperations = operations.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            List<InfoOperationDTO> infoOperations = new List<InfoOperationDTO>();
+            foreach (Operation operation in someOperations)
+            {
+                InfoOperationDTO currentOperation = new InfoOperationDTO(operation);
+                infoOperations.Add(currentOperation);
+            }
+
+            return new InfoOperationsDTO
+            {
+                PageInfo = new PageInfoDTO
+                {
+                    PageSize = pageSize,
+                    PageCount = count,
+                    CurrentPage = page
+                },
+                Operations = infoOperations
+            };
+        }
     }
 }

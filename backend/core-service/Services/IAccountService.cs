@@ -6,7 +6,7 @@ namespace core_service.Services
     public interface IAccountService
     {
         Task<int> CreateAccount(CreateAccountDTO model);
-        DetailInfoAccount GetInfoAccount(Guid UserID, int accountNumber);
+        InfoAccountDTO GetInfoAccount(Guid UserID, int accountNumber);
         Task EditAccount(Guid UserID, int accountNumber, AccountState accountState);
         InfoAccountsDTO GetAllUserAccounts(Guid UserID);
     }
