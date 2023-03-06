@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using credit_service.Models;
 using credit_service.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,19 +23,38 @@ namespace credit_service.Controllers
             _userCreditService = userCreditService;
         }
 
-        // GET: api/values
+        [Route("userCredits")]
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<List<ShortCreditModel>> Get(Guid userId)
         {
-            return new string[] { "value1", "value2" };
+            return await _userCreditService.GetAllCredits(userId);
         }
 
-        /*[Route("{userId}/credits/{userCreditId}")]
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("userCredits/{creditId}")]
+        public async Task<ActionResult<CreditInfoModel>> Get(Guid userId, Guid creditId)
         {
-            return "value";
-        }*/
+            var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
+            if (credit == null)
+            {
+                return BadRequest();
+            }
+
+            var creditRate = await _context.CreditRates.Where(x => x.CreditRateId == credit.CreditRateId).FirstOrDefaultAsync();
+
+            return new CreditInfoModel(credit, creditRate.Title, creditRate.InterestRate);
+        }
+
+        [HttpGet("{userId}/credits/{creditId}/loanBalance")]
+        public async Task<ActionResult<double>> GetLoanBalance(Guid creditId)
+        {
+            var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
+            if (credit == null)
+            {
+                return BadRequest();
+            }
+
+            return credit.LoanBalance;
+        }
 
         [Route("{creditRateId}/takeCredit")]
         [HttpPost]
@@ -56,16 +76,54 @@ namespace credit_service.Controllers
             return Ok();
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("{userId}/credits/{creditId}/regularPayment")]
+        public async Task<IActionResult> Put(Guid userId, Guid creditId)
         {
+            var credit = _userCreditService.MakeRegularPayment(creditId);
+            if (credit == null)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [HttpPut("{userId}/credits/{creditId}/lastPayment")]
+        public async Task<IActionResult> Put(Guid userId, Guid creditId, double paymentAmount)
+        {
+            Credit credit = null;
+            try
+            {
+                credit = await _userCreditService.MakeLastPayment(creditId, paymentAmount);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpPut("{userId}/credits/{creditId}/closeCredit")]
+        public async Task<IActionResult> Put(Guid creditId)
         {
+            Credit credit = null;
+            try
+            {
+                credit = await _userCreditService.CloseCredit(creditId);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 }

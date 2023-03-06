@@ -15,7 +15,6 @@ builder.Services.AddScoped<IUserCreditService, UserCreditService>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<TestContext>(options => options.UseMySQL(connection));
 
 builder.Services.AddDbContext<Context>(
             dbContextOptions => dbContextOptions

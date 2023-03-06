@@ -9,11 +9,11 @@ namespace credit_service.Models
 		public CreditRate CreditRate { get; set; }
 		public DateTime MaturityDate { get; set; }
 		public int PaymentTerm { get; set; }
-		public double LoanAmount { get; set; }
-		public double PayoutAmount { get; set; }
+		public double LoanAmount { get; set; }//размер кредита
+		public double PayoutAmount { get; set; }//платеж
 		public CreditStatus Status { get; set; }
 		public int AccountNum { get; set; }
-		public double? LoanBalance { get; set; }
+		public double? LoanBalance { get; set; }//остаток
 
         public Credit()
 		{

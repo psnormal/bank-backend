@@ -33,12 +33,12 @@ namespace credit_service.Controllers
         [HttpGet("{creditRateId}/CreditRateInformation")]
         public async Task<ActionResult<CreditRateInformationModel>> Get(Guid creditRateId)
         {
-            var user = await _context.CreditRates.Where(x => x.CreditRateId == creditRateId).FirstOrDefaultAsync();
-            if (user == null)
+            var creditRate = await _context.CreditRates.Where(x => x.CreditRateId == creditRateId).FirstOrDefaultAsync();
+            if (creditRate == null)
             {
                 return BadRequest();
             }
-            return new CreditRateInformationModel(user);
+            return new CreditRateInformationModel(creditRate);
         }
 
         [Route("NewCreditRate")]
