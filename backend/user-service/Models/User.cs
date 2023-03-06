@@ -23,6 +23,15 @@ namespace user_service.Models
 			this.Role = Roles.Client;
 			this.Status = UserStatus.Active;
 		}
+
+		public User(EmployeeRegistrationModel model)
+		{
+            this.Name = model.Name;
+            this.Lastname = model.Lastname;
+            this.Password = model.Password;
+            this.Role = Roles.Employee;
+            this.Status = UserStatus.Active;
+        }
     }
 }
 

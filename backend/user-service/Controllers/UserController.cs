@@ -26,6 +26,7 @@ namespace user_service.Controllers
             _hashService = hashService;
         }
 
+        [Route("ClientRegistration")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ClientRegistrationModel model)
         {
@@ -45,7 +46,27 @@ namespace user_service.Controllers
             return Ok();
         }
 
-        [Route("userInformation")]
+        [Route("EmployeeRegistration")]
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] EmployeeRegistrationModel model)
+        {
+            User user = null;
+            try
+            {
+                user = await _userService.AddNewEmployee(model);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [Route("{userId}/ClientInformation")]
         [HttpGet]
         public async Task<ActionResult<ClientProfileModel>> Get(Guid userId)
         {
@@ -57,14 +78,14 @@ namespace user_service.Controllers
             return new ClientProfileModel(user);
         }
 
+        [Route("AllUsers")]
         [HttpGet]
         public async Task<List<ClientProfileModel>> Get()
         {
             return await _userService.GetAllUsers();
         }
 
-        // PUT api/values/5
-        [HttpPut("block")]
+        [HttpPut("{userId}/block")]
         public async Task<IActionResult> Put(Guid userId)
         {
             var user = await _context.Users.Where(x => x.UserId == userId).FirstOrDefaultAsync();
@@ -72,27 +93,6 @@ namespace user_service.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
-
-        /* PUT api/values/5
-        [Authorize]
-        [HttpPut]
-        public async Task<IActionResult> Put([FromBody] ProfileModel model)
-        {
-            var user = await _context.Users.Where(x => x.Username == User.Identity.Name).FirstOrDefaultAsync();
-            if (user == null)
-            {
-                return BadRequest();
-            }
-            user.Name = model.Name;
-            user.avatarLink = model.avatarLink;
-            user.Email = model.Email;
-            user.Gender = model.Gender;
-            user.BirthDate = model.BirthDate;
-            await _context.SaveChangesAsync();
-            return Ok();
-        }*/
-
-
     }
 }
 

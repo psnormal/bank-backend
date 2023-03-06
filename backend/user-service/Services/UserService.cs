@@ -7,6 +7,8 @@ namespace user_service.Services
     public interface IUserService
     {
         public Task<User> AddNewClient(ClientRegistrationModel model);
+        public Task<User> AddNewEmployee(EmployeeRegistrationModel model);
+
         public Task<List<ClientProfileModel>> GetAllUsers();
     }
 
@@ -21,6 +23,21 @@ namespace user_service.Services
         }
 
         public async Task<User> AddNewClient(ClientRegistrationModel model)
+        {
+            string newPass = _hashService.HashPassword(model.Password);
+            model.Password = newPass;
+            User newUser = new User(model);
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+            var curUser = await _context.Users.Where(x => x.UserId == newUser.UserId).SingleOrDefaultAsync();
+            if (curUser == null)
+            {
+                throw new Exception("Unable to create User");
+            }
+            return curUser;
+        }
+
+        public async Task<User> AddNewEmployee(EmployeeRegistrationModel model)
         {
             string newPass = _hashService.HashPassword(model.Password);
             model.Password = newPass;
