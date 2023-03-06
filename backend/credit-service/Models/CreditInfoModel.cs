@@ -4,7 +4,7 @@ namespace credit_service.Models
 	public class CreditInfoModel
 	{
         public string CreditRateTitle { get; set; }
-        public int InterestRate { get; set; }
+        public double InterestRate { get; set; }
         public DateTime MaturityDate { get; set; }
         public int PaymentTerm { get; set; }
         public double LoanAmount { get; set; }//размер кредита
@@ -13,7 +13,7 @@ namespace credit_service.Models
         public int AccountNum { get; set; }
         public double? LoanBalance { get; set; }//остаток
 
-        public CreditInfoModel(Credit model, string creditRateTitle, int interestRate)
+        public CreditInfoModel(Credit model, string creditRateTitle, double interestRate)
 		{
             this.MaturityDate = model.MaturityDate;
             this.PaymentTerm = model.PaymentTerm;

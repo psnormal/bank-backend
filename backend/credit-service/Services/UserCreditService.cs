@@ -58,7 +58,7 @@ namespace credit_service.Services
         public async Task<Credit> MakeRegularPayment(Guid creditId)
         {
             var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
-            credit.LoanBalance = credit.LoanBalance - credit.PayoutAmount;
+            credit.LoanBalance -= credit.PayoutAmount;
             await _context.SaveChangesAsync();
             return credit;
         }

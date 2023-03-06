@@ -5,7 +5,7 @@ namespace credit_service.Models
 	{
         public string Title { get; set; }
         public string? Description { get; set; }
-        public int InterestRate { get; set; }
+        public double InterestRate { get; set; }
 	}
 }
 
