@@ -6,13 +6,14 @@ import NewEmployeeCreationForm from "./NewEmployeeCreationForm";
 
 class NewEmployeeCreationFormContainer extends React.Component {
     componentDidMount() {
-        console.log(this.props);
     }
 
     render() {
         return (
         <>
-        <NewEmployeeCreationForm {...this.props}/>
+        <NewEmployeeCreationForm newEmployee={this.props.newEmployee}
+                                 createEmployee={this.props.createNewEmployeeThunkCreator}
+                                 setEmployee={this.props.setNewEmployeeActionCreator}/>
         </>
         )
     }

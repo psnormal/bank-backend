@@ -11,7 +11,8 @@ class EmployeesContainer extends React.Component {
     render() {
         return (
         <>
-        <Employees {...this.props}/>
+        <Employees employeePage={this.props.employeePage}
+                   blockAnEmployee={this.props.blockAnEmployeeThunkCreator} />
         </>
         )
     }

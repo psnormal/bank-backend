@@ -1,8 +1,13 @@
-import React from "react"
+import React from "react";
+import ClientsContainer from "./ClientsContainer";
+import NewClientCreationFormContainer from "./NewClientCreationFormContainer";
 
 function ClientPage() {
     return (
-        <h1>Client Page</h1>
+        <>
+            <NewClientCreationFormContainer />
+            <ClientsContainer/>
+        </>
     )
 }
 
