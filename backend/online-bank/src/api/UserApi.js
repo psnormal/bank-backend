@@ -1,4 +1,3 @@
-import React from 'react';
 import axios from 'axios';
 
 const baseUrl = 'https://localhost:7099/api/';

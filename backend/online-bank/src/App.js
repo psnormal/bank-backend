@@ -1,5 +1,5 @@
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css.map';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Routes } from 'react-router-dom';
 import ClientPage from './components/layout/clientsPage/ClientPage';
 import EmployeesPage from './components/layout/employeePage/EmployeesPage';

@@ -60,7 +60,7 @@ export const blockAnEmployeeThunkCreator = (employeeId) => {
         .then(() => {
             UserApi.getAllUsers()
             .then(data => {
-                let allEmployees = data.filter(e => e.role == 'сотрудник')
+                let allEmployees = data.filter(e => e.role === 'сотрудник')
                 dispatch(setEmployeesActionCreator(allEmployees));
             })
         })
