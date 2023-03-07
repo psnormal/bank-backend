@@ -12,7 +12,7 @@ function ClientItem(props) {
                     <Col xs="auto">
                         <Button variant="danger" className="text-wrap float-end"
                             onClick={(e) => props.onBlockButtonClick(props.client.userID)}>
-                            Заблокировать
+                            Block
                         </Button>
                     </Col>
                 </Row>

@@ -9,12 +9,13 @@ function NewClientCreationForm(props) {
     return (
         <Card className="mb-4 mx-auto" style={{ width: '800px' }}>
             <Card.Body>
-                <h3 className="text-center">Создать нового клиента</h3>
+                {/*<h3 className="text-center">Создать нового клиента</h3>*/}
+                <h3 className="text-center">Create new client</h3>
                 <Form>
                     <Form.Group className="mb-3" controlId="name">
-                        <Form.Label>Имя</Form.Label>
+                        <Form.Label>Name</Form.Label>
                         <Form.Control type="text"
-                            placeholder="Введите имя клиента"
+                            placeholder="Input client's name"
                             defaultValue={props.newClient.name}
                             ref={nameRef}
                             onChange={() => {
@@ -26,9 +27,9 @@ function NewClientCreationForm(props) {
                             }} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="lastName">
-                        <Form.Label>Фамилия</Form.Label>
+                        <Form.Label>Lastname</Form.Label>
                         <Form.Control type="text"
-                            placeholder="Введите фамилию клиента"
+                            placeholder="Input client's lastname"
                             defaultValue={props.newClient.lastname}
                             ref={lastnameRef}
                             onChange={() => {
@@ -40,9 +41,9 @@ function NewClientCreationForm(props) {
                             }} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="password">
-                        <Form.Label>Пароль</Form.Label>
+                        <Form.Label>Password</Form.Label>
                         <Form.Control type="password"
-                            placeholder="Введите пароль"
+                            placeholder="Input password"
                             defaultValue={props.newClient.password}
                             ref={passwordRef}
                             onChange={() => {
@@ -58,7 +59,7 @@ function NewClientCreationForm(props) {
                             lastnameRef.current.value,
                             passwordRef.current.value)
                     }}>
-                        Создать
+                        Create
                     </Button>
                 </Form>
             </Card.Body>
