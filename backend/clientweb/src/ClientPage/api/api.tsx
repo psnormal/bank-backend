@@ -67,9 +67,9 @@ class API{
             transactionAmount: transactionAmount,
         };
         const blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-		const res = await fetch(this.core + 'api/operation/create', {method: 'post', body: blob }).then(res=>res.json());
+        const res = await fetch(this.core + 'api/operation/create', { method: 'post', body: blob }).then(response => response.json());
         console.log(blob);
-        return res;
+        //return res;
 	}
 
     //POST взять кредит

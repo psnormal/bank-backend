@@ -9,7 +9,6 @@ function NewClientCreationForm(props) {
     return (
         <Card className="mb-4 mx-auto" style={{ width: '800px' }}>
             <Card.Body>
-                {/*<h3 className="text-center">Создать нового клиента</h3>*/}
                 <h3 className="text-center">Create new client</h3>
                 <Form>
                     <Form.Group className="mb-3" controlId="name">
