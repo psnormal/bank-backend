@@ -19,7 +19,7 @@ namespace credit_service.Models
 		{
 		}
 
-        public Credit(Guid userId, Guid creditRateId, int accountNum, double interestRate, CreditTakingModel model)
+        public Credit(Guid userId, Guid creditRateId, int accountNum, double interestRate, CreditTakingDto model)
         {
 			this.UserId = userId;
 			this.CreditRateId = creditRateId;

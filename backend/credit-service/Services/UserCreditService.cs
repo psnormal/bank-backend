@@ -7,7 +7,7 @@ namespace credit_service.Services
 {
 	public interface IUserCreditService
 	{
-        public Task<Credit> AddNewCredit(Guid creditRateId, Guid userId, int accountNum, CreditTakingModel model);
+        public Task<Credit> AddNewCredit(Guid creditRateId, Guid userId, int accountNum, CreditTakingDto model);
         public Task<List<ShortCreditModel>> GetAllCredits(Guid userID);
         public Task<Credit> MakeRegularPayment(Guid creditId);
         public Task<Credit> MakeLastPayment(Guid creditId, double paymentAmount);
@@ -24,7 +24,7 @@ namespace credit_service.Services
             _context = context;
         }
 
-        public async Task<Credit> AddNewCredit(Guid creditRateId, Guid userId, int accountNum, CreditTakingModel model)
+        public async Task<Credit> AddNewCredit(Guid creditRateId, Guid userId, int accountNum, CreditTakingDto model)
         {
             var creditRate = await _context.CreditRates.Where(x => x.CreditRateId == creditRateId).SingleOrDefaultAsync();
             if (creditRate == null)

@@ -58,7 +58,7 @@ namespace credit_service.Controllers
 
         [Route("{creditRateId}/takeCredit")]
         [HttpPost]
-        public async Task<IActionResult> Post(Guid creditRateId, Guid userId, int accountNum, [FromBody]CreditTakingModel model)
+        public async Task<IActionResult> Post(Guid creditRateId, Guid userId, int accountNum, [FromBody]CreditTakingDto model)
         {
             Credit newRate = null;
             try

@@ -61,7 +61,14 @@ const Credit: React.FC = () => {
     
     const takeCredit = async () => {
         if (credit && numberAccount && paymentTerm && loanAmount && date) {
-            await API.takeCredit(userInfo.userId, credit, parseInt(numberAccount), date, paymentTerm, loanAmount);
+            const creditRateId = creditRates?.filter(item => item.title === credit);
+            console.log(creditRateId?.[0]);
+            console.log('gff');
+            if (creditRateId?.[0] && creditRateId?.[0].creditRateId) {
+                console.log(creditRateId?.[0].creditRateId);
+                await API.takeCredit(userInfo.userId, creditRateId[0].creditRateId, parseInt(numberAccount), date, paymentTerm, loanAmount);
+            }
+            
         }
 
         setNumberAccount(undefined);
