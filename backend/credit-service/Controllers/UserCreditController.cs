@@ -45,7 +45,7 @@ namespace credit_service.Controllers
         }
 
         [HttpGet("{userId}/credits/{creditId}/loanBalance")]
-        public async Task<ActionResult<double>> GetLoanBalance(Guid creditId)
+        public async Task<ActionResult<decimal>> GetLoanBalance(Guid creditId)
         {
             var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
             if (credit == null)
@@ -88,7 +88,7 @@ namespace credit_service.Controllers
         }
 
         [HttpPut("{userId}/credits/{creditId}/lastPayment")]
-        public async Task<IActionResult> Put(Guid userId, Guid creditId, double paymentAmount)
+        public async Task<IActionResult> Put(Guid userId, Guid creditId, decimal paymentAmount)
         {
             Credit credit = null;
             try

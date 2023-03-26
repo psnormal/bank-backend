@@ -5,7 +5,7 @@ namespace credit_service.Models
 	{
         public DateTime MaturityDate { get; set; }
         public int PaymentTerm { get; set; }
-        public double LoanAmount { get; set; }
+        public decimal LoanAmount { get; set; }
 
         public CreditTakingDto()
 		{

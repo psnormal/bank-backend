@@ -9,6 +9,7 @@ namespace credit_service.Models
 	{
         public DbSet<CreditRate> CreditRates { get; set; }
         public DbSet<Credit> Credit { get; set; }
+        public DbSet<CreditPayment> CreditPayments { get; set; }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {

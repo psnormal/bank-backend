@@ -10,8 +10,9 @@ namespace credit_service.Services
         public Task<Credit> AddNewCredit(Guid creditRateId, Guid userId, int accountNum, CreditTakingDto model);
         public Task<List<ShortCreditModel>> GetAllCredits(Guid userID);
         public Task<Credit> MakeRegularPayment(Guid creditId);
-        public Task<Credit> MakeLastPayment(Guid creditId, double paymentAmount);
+        public Task<Credit> MakeLastPayment(Guid creditId, decimal paymentAmount);
         public Task<Credit> CloseCredit(Guid creditId);
+        public Task MakeAllRegularPayments();
 
     }
 
@@ -55,15 +56,26 @@ namespace credit_service.Services
             return creditsInfo;
         }
 
+        public async Task MakeAllRegularPayments()
+        {
+            var credits = await _context.Credit.Where(x => x.Status == CreditStatus.notRepaid).ToListAsync();
+            for(int i = 0; i < credits.Count; i++)
+            {
+                await MakeRegularPayment(credits[i].CreditId);
+            }
+        }
+
         public async Task<Credit> MakeRegularPayment(Guid creditId)
         {
             var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
+            var creditPayment = new CreditPayment(credit);
+            _context.CreditPayments.Add(creditPayment);
             credit.LoanBalance -= credit.PayoutAmount;
             await _context.SaveChangesAsync();
             return credit;
         }
 
-        public async Task<Credit> MakeLastPayment(Guid creditId, double paymentAmount)
+        public async Task<Credit> MakeLastPayment(Guid creditId, decimal paymentAmount)
         {
             var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
             if (credit == null)
