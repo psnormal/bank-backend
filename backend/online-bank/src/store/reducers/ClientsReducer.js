@@ -1,7 +1,7 @@
 import { UserApi } from "../../api/UserApi";
 
 const SET_CLIENTS = 'SET_CLIENTS';
-const SET_NEW_CLIENT = 'SET_NEW_CLIENT';
+const UPDATE_NEW_CLIENT = 'UPDATE_NEW_CLIENT';
 const CLEAR_NEW_CLIENT = 'CLEAR_NEW_CLIENT';
 
 let initialState = {
@@ -14,21 +14,28 @@ let initialState = {
 }
 
 const ClientsReducer = (state = initialState, action) => {
-    let newState = { ...state };
     switch (action.type) {
         case SET_CLIENTS: {
-            newState.clients = action.clients;
-            return newState;
+            return {
+                ...state,
+                clients: action.clients
+            }
         }
-        case SET_NEW_CLIENT: {
-            newState.newClient = action.newClient;
-            return newState;
+        case UPDATE_NEW_CLIENT: {
+            return {
+                ...state,
+                newClient: action.newClient
+            }
         }
         case CLEAR_NEW_CLIENT: {
-            newState.newClient.name = '';
-            newState.newClient.lastname = '';
-            newState.newClient.password = '';
-            return newState;
+            return {
+                ...state,
+                newClient: {
+                    name: '',
+                    lastname: '',
+                    password: ''
+                }
+            }
         }
         default:
             return state;
@@ -44,9 +51,9 @@ export const setClientsActionCreator = (clients) => {
     }
 };
 // Обновить состояние создаваемого клиента
-export const setNewClientActionCreator = (newClient) => {
+export const updateNewClientActionCreator = (newClient) => {
     return {
-        type: SET_NEW_CLIENT,
+        type: UPDATE_NEW_CLIENT,
         newClient: newClient
     }
 }
@@ -73,7 +80,6 @@ export const blockAnClientThunkCreator = (clientId) => {
     return (dispatch) => {
         UserApi.blockUser(clientId)
             .then(() => {
-                console.log('user was blocked')
                 UserApi.getAllUsers()
                     .then(data => {
                         data = data.filter(client => client.role == 0)
@@ -83,11 +89,11 @@ export const blockAnClientThunkCreator = (clientId) => {
     }
 }
 // Создать сотрудника на сервере
-export const createNewClientThunkCreator = (name, lastname, password) => {
+export const createNewClientThunkCreator = (newClient) => {
     return (dispatch) => {
-        UserApi.registerClient(name, lastname, password)
+        UserApi.registerClient(newClient.name, newClient.lastname, newClient.password)
             .then(() => {
-                dispatch(clearNewClientActionCreator)
+                dispatch(clearNewClientActionCreator())
                 UserApi.getAllUsers()
                     .then(data => {
                         data = data.filter(client => client.role == 0)

@@ -1,6 +1,6 @@
 import { CreditApi } from "../../api/CreditApi";
 
-const SET_NEW_CREDIT_RATE = 'SET_NEW_EMPLOYEE';
+const UPDATE_NEW_CREDIT_RATE = 'UPDATE_NEW_CREDIT_RATE';
 const CLEAR_NEW_CREDIT_RATE = 'CLEAR_NEW_EMPLOYEE';
 
 let initialState = {
@@ -12,17 +12,22 @@ let initialState = {
 }
 
 const CreditsReducer = (state = initialState, action) => {
-    let newState = { ...state };
     switch (action.type) {
-        case SET_NEW_CREDIT_RATE: {
-            newState.newCreditRate = action.newCreditRate;
-            return newState;
+        case UPDATE_NEW_CREDIT_RATE: {
+            return {
+                ...state,
+                newCreditRate : action.newCreditRate
+            }
         }
         case CLEAR_NEW_CREDIT_RATE: {
-            newState.newCreditRate.title = '';
-            newState.newCreditRate.description = '';
-            newState.newCreditRate.interestRate = '';
-            return newState;
+            return {
+                ...state,
+                newCreditRate: {
+                    title: '',
+                    description: '',
+                    interestRate: ''
+                }
+            }
         }
         default:
             return state;
@@ -31,9 +36,9 @@ const CreditsReducer = (state = initialState, action) => {
 
 // Actions
 // Обновить состояние создаваемого кредитного тарифа
-export const setNewCreditRateActionCreator = (newCreditRate) => {
+export const updateNewCreditRateActionCreator = (newCreditRate) => {
     return {
-        type: SET_NEW_CREDIT_RATE,
+        type: UPDATE_NEW_CREDIT_RATE,
         newCreditRate: newCreditRate
     }
 }
@@ -46,11 +51,11 @@ export const clearNewCreditRateActionCreator = () => {
 
 // Thunks
 // Создать сотрудника на сервере
-export const createNewCreditRateThunkCreator = (title, description, interestRate) => {
+export const createNewCreditRateThunkCreator = (newCreditRate) => {
     return (dispatch) => {
-        CreditApi.createNewCreditRate(title, description, interestRate)
+        CreditApi.createNewCreditRate(newCreditRate.title, newCreditRate.description, Number(newCreditRate.interestRate))
             .then(() => {
-                dispatch(clearNewCreditRateActionCreator)
+                dispatch(clearNewCreditRateActionCreator())
             })
     }
 

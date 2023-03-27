@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from 'react-redux'
-import { createNewEmployeeThunkCreator, setNewEmployeeActionCreator } from "../../../store/reducers/EmployeesReducer";
+import { createNewEmployeeThunkCreator, updateNewEmployeeActionCreator } from "../../../store/reducers/EmployeesReducer";
 import NewEmployeeCreationForm from "./NewEmployeeCreationForm";
 
 
@@ -13,7 +13,7 @@ class NewEmployeeCreationFormContainer extends React.Component {
         <>
         <NewEmployeeCreationForm newEmployee={this.props.newEmployee}
                                  createEmployee={this.props.createNewEmployeeThunkCreator}
-                                 setEmployee={this.props.setNewEmployeeActionCreator}/>
+                                 updateEmployee={this.props.updateNewEmployeeActionCreator}/>
         </>
         )
     }
@@ -26,4 +26,4 @@ let mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, {createNewEmployeeThunkCreator, setNewEmployeeActionCreator})(NewEmployeeCreationFormContainer)
+export default connect(mapStateToProps, { createNewEmployeeThunkCreator, updateNewEmployeeActionCreator})(NewEmployeeCreationFormContainer)
