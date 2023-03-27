@@ -2,6 +2,8 @@
 using core_service.Services;
 using core_service.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace core_service.Controllers
 {

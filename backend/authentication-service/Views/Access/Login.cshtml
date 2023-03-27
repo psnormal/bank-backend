@@ -1,0 +1,26 @@
+﻿@model authentication_service.Models.LoginViewModel;
+@{
+	ViewData["Title"] = "Login";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+
+<div class="container">
+    <div class="row justify-content-start">
+        <div class="col-md-6 offset-md-3">
+            <form asp-controller="Access" asp-action="Login" method="post">
+                <div class="mb-3">
+                    <label for="InputLogin" class="form-label">Login</label>
+                    <input type="text" class="form-control" id="InputLogin" asp-for="Login">
+                </div>
+                <div class="mb-3">
+                    <label for="InputPassword" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="InputPassword" asp-for="Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Enter</button>
+            </form>
+        </div>
+    </div>
+</div>
