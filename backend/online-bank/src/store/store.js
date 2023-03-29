@@ -1,14 +1,15 @@
 import { legacy_createStore as createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import thunk from 'redux-thunk';
+import AccountInfoReducer from './reducers/AccountInfoReducer';
 import ClientsReducer from './reducers/ClientsReducer';
 import CreditsReducer from './reducers/CreditsReducer';
 import EmployeesReducer from "./reducers/EmployeesReducer";
 
-
 let reducers = combineReducers({
     employeePage: EmployeesReducer,
     creditPage: CreditsReducer,
-    clientPage: ClientsReducer
+    clientPage: ClientsReducer,
+    accountInfoPage: AccountInfoReducer
 });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

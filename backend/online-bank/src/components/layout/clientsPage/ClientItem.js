@@ -1,5 +1,6 @@
 import React from "react";
 import { ListGroup, Row, Col, Button } from 'react-bootstrap';
+import ClientAccountsList from "./ClientAccountsList";
 
 function ClientItem(props) {
     return (
@@ -12,10 +13,11 @@ function ClientItem(props) {
                     <Col xs="auto">
                         <Button variant="danger" className="text-wrap float-end"
                             onClick={(e) => props.onBlockButtonClick(props.client.userID)}>
-                            Block
+                            Заблокировать
                         </Button>
                     </Col>
                 </Row>
+                <ClientAccountsList accounts={props.client.accounts} userId={props.client.userID}/>
             </ListGroup.Item>
         </>
     )

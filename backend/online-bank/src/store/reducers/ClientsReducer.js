@@ -1,4 +1,5 @@
 import { UserApi } from "../../api/UserApi";
+import { CoreApi } from "../../api/CoreApi";
 
 const SET_CLIENTS = 'SET_CLIENTS';
 const UPDATE_NEW_CLIENT = 'UPDATE_NEW_CLIENT';
@@ -42,7 +43,7 @@ const ClientsReducer = (state = initialState, action) => {
     }
 };
 
-// Actions
+// ACTIONS
 // ќбновить массив клиентов после получени€ данных с сервера
 export const setClientsActionCreator = (clients) => {
     return {
@@ -64,18 +65,31 @@ export const clearNewClientActionCreator = () => {
     }
 }
 
-// Thunks
-// ѕолучить всех клиентов с сервера
+// THUNKS
+// ѕолучить всех клиентов и их счета с сервера
+const connectClientsAndAccounts = async (clients) => {
+    await Promise.all(clients.map(client => {
+        return CoreApi.getAllUserAccounts(client.userID)
+            .then(data => {
+                client.accounts = [...data.accounts];
+            })
+    }))
+
+    return clients;
+}
 export const getClientsThunkCreator = () => {
     return (dispatch) => {
         UserApi.getAllUsers()
-            .then(data => {
-                data = data.filter(client => client.role == 0)
-                dispatch(setClientsActionCreator(data));
+            .then(allUsers => {
+                let allClients = allUsers.filter(user => user.role == 0);
+                connectClientsAndAccounts(allClients)
+                    .then(allClientsWithAccounts => {
+                        dispatch(setClientsActionCreator(allClientsWithAccounts));
+                    })
             })
     }
 }
-// «аблокировать сотрудника на сервере
+// «аблокировать клиента на сервере
 export const blockAnClientThunkCreator = (clientId) => {
     return (dispatch) => {
         UserApi.blockUser(clientId)
@@ -88,7 +102,7 @@ export const blockAnClientThunkCreator = (clientId) => {
             })
     }
 }
-// —оздать сотрудника на сервере
+// —оздать клиента на сервере
 export const createNewClientThunkCreator = (newClient) => {
     return (dispatch) => {
         UserApi.registerClient(newClient.name, newClient.lastname, newClient.password)

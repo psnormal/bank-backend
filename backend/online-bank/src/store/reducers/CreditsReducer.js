@@ -42,7 +42,7 @@ export const updateNewCreditRateActionCreator = (newCreditRate) => {
         newCreditRate: newCreditRate
     }
 }
-// Очистить данные о созданном сотруднике
+// Очистить данные о созданном кредитном тарифе
 export const clearNewCreditRateActionCreator = () => {
     return {
         type: CLEAR_NEW_CREDIT_RATE
@@ -50,7 +50,7 @@ export const clearNewCreditRateActionCreator = () => {
 }
 
 // Thunks
-// Создать сотрудника на сервере
+// Создать крудитный тариф на сервере
 export const createNewCreditRateThunkCreator = (newCreditRate) => {
     return (dispatch) => {
         CreditApi.createNewCreditRate(newCreditRate.title, newCreditRate.description, Number(newCreditRate.interestRate))

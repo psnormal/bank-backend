@@ -5,6 +5,7 @@ import ClientPage from './components/layout/clientsPage/ClientPage';
 import EmployeesPage from './components/layout/employeePage/EmployeesPage';
 import CreditsPage from './components/layout/creditsPage/CreditsPage';
 import Layout from './components/layout/Layout';
+import AccountInfoPage from './components/layout/accountInfoPage/AccountInfoPage';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
           <Route index element={<ClientPage/>}></Route>
           <Route path='/clients' element={<ClientPage/>}></Route>
           <Route path='/employees' element={<EmployeesPage/>}></Route>
-          <Route path='/credits' element={<CreditsPage/>}></Route>
+          <Route path='/credits' element={<CreditsPage />}></Route>
+          <Route path='/account/:accountId/:currentPage/:userId' element={<AccountInfoPage />}></Route>
         </Route>
       </Routes>
     </div>
