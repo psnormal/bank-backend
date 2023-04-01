@@ -34,7 +34,7 @@ namespace credit_service.Models
 			double a = (double)(1 + monthInterestRate);
 			this.PayoutAmount = this.LoanAmount * ((monthInterestRate * (decimal)Math.Pow(a, this.PaymentTerm)) /
                 (decimal)(Math.Pow(a, this.PaymentTerm) - 1));
-			this.LoanBalance = this.LoanAmount;
+			this.LoanBalance = this.PayoutAmount * this.PaymentTerm;
         }
     }
 }

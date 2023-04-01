@@ -78,6 +78,14 @@ namespace user_service.Controllers
             return new ClientProfileModel(user);
         }
 
+        [Route("{userId}/name")]
+        [HttpGet]
+        public async Task<string> Get(Guid userId, string _tring)
+        {
+            var user = await _context.Users.Where(x => x.UserId == userId).FirstOrDefaultAsync();
+            return user.Name;
+        }
+
         [Route("AllUsers")]
         [HttpGet]
         public async Task<List<ClientProfileModel>> Get()

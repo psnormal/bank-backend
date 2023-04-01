@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+using Azure;
 using credit_service.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,15 +34,32 @@ namespace credit_service.Services
             {
                 throw new Exception("Unable to create credit");
             }
-            Credit newCredit = new Credit(userId, creditRateId, accountNum, creditRate.InterestRate, model);
-            _context.Credit.Add(newCredit);
-            await _context.SaveChangesAsync();
-            var credit = await _context.Credit.Where(x => x.CreditId == newCredit.CreditId).SingleOrDefaultAsync();
-            if (credit == null)
+            var url = $"https://localhost:7139/api/account/create";
+            using var client = new HttpClient();
+            var account = new CreatingAccount(userId);
+            JsonContent content = JsonContent.Create(account);
+            var response = await client.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
             {
-                throw new Exception("Unable to create credit");
+                var resultContent = await response.Content.ReadFromJsonAsync<AccountInfo>();
+
+                Credit newCredit = new Credit(userId, creditRateId, resultContent.AccountNumber, creditRate.InterestRate, model);
+                _context.Credit.Add(newCredit);
+
+                await _context.SaveChangesAsync();
+                var credit = await _context.Credit.Where(x => x.CreditId == newCredit.CreditId).SingleOrDefaultAsync();
+                if (credit == null)
+                {
+                    throw new Exception("Unable to create credit");
+                }
+                return credit;
             }
-            return credit;
+            else
+            {
+                throw new Exception("Unable to create credit account");
+            }
+
         }
 
         public async Task<List<ShortCreditModel>> GetAllCredits(Guid userID)
@@ -61,7 +80,11 @@ namespace credit_service.Services
             var credits = await _context.Credit.Where(x => x.Status == CreditStatus.notRepaid).ToListAsync();
             for(int i = 0; i < credits.Count; i++)
             {
-                await MakeRegularPayment(credits[i].CreditId);
+                if (credits[i].Status == CreditStatus.notRepaid)
+                {
+                    await MakeRegularPayment(credits[i].CreditId);
+                }
+
             }
         }
 
@@ -69,8 +92,13 @@ namespace credit_service.Services
         {
             var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
             var creditPayment = new CreditPayment(credit);
-            _context.CreditPayments.Add(creditPayment);
             credit.LoanBalance -= credit.PayoutAmount;
+            if (credit.LoanBalance <= 0)
+            {
+                credit.Status = CreditStatus.repaid;
+                creditPayment.IsLast = true;
+            }
+            _context.CreditPayments.Add(creditPayment);
             await _context.SaveChangesAsync();
             return credit;
         }

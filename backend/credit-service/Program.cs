@@ -14,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICreditRateService, CreditRateService>();
 builder.Services.AddScoped<IUserCreditService, UserCreditService>();
+builder.Services.AddScoped<ICreditRatingService, CreditRatingService>();
 builder.Services.AddHostedService<RepeatingService>();
 
 
@@ -33,24 +34,6 @@ using var serviceScope = app.Services.CreateScope();
 var dbContext = serviceScope.ServiceProvider.GetService<Context>();
 
 dbContext?.Database.Migrate();
-
-/*
- * var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-builder.Services.AddDbContext<Context>(
-            dbContextOptions => dbContextOptions
-                .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors());
-
-var app = builder.Build();
-
-using var serviceScope = app.Services.CreateScope();
-var dbContext = serviceScope.ServiceProvider.GetService<Context>();
-
-dbContext?.Database.Migrate();
- */
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -18,7 +18,16 @@ builder.Services.AddScoped<IOperationService, OperationService>();
 
 //DB connection:
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+
+//подключение через помелу
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(
+            dbContextOptions => dbContextOptions
+                .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors());
 
 var app = builder.Build();
 

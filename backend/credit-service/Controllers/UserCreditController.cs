@@ -23,6 +23,22 @@ namespace credit_service.Controllers
             _userCreditService = userCreditService;
         }
 
+        [Route("users")]
+        [HttpGet]
+        public async Task<string> Get()
+        {
+            var userId = "08db2dec-2235-4450-869a-775a5f04b868";
+            var url = $"https://localhost:7099/api/User/{userId}/name";
+            using var client = new HttpClient();
+            var response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return content;
+            }
+            return "Это не работает:(";
+        }
+
         [Route("userCredits")]
         [HttpGet]
         public async Task<List<ShortCreditModel>> Get(Guid userId)

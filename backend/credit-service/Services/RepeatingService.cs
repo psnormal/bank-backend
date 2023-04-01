@@ -4,7 +4,7 @@ namespace credit_service.Services
 {
 	public class RepeatingService: BackgroundService
 	{
-        private readonly PeriodicTimer _timer = new(TimeSpan.FromMilliseconds(2000));
+        private readonly PeriodicTimer _timer = new(TimeSpan.FromMilliseconds(5000));
         public IServiceProvider Services { get; }
         private readonly ILogger<RepeatingService> _logger;
 
