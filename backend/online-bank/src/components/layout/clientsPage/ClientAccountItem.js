@@ -9,8 +9,8 @@ function ClientAccountItem(props) {
                 <ListGroup.Item className="px-6 py-3">
                     <Container>
                         <Row className="justify-content-between">
-                            <Col xs="auto">Номер счета: {props.account.accountNumber}</Col>
-                            <Col xs="auto">
+                            <Col >Номер счета: {props.account.accountNumber}</Col>
+                            <Col>
                                 {
                                     props.account.type === 0
                                         ? <span>Дебетовый счет</span>
@@ -18,7 +18,7 @@ function ClientAccountItem(props) {
 
                                 }
                             </Col>
-                            <Col xs="auto">
+                            <Col>
                                 {
                                     props.account.state === 0
                                         ? <span>Открыт</span>
@@ -26,7 +26,7 @@ function ClientAccountItem(props) {
 
                                 }
                             </Col>
-                            <Col xs="auto">Баланс: {props.account.balance}</Col>
+                            <Col className="text-center">Баланс: {props.account.balance}</Col>
                         </Row>
                     </Container>
                 </ListGroup.Item>

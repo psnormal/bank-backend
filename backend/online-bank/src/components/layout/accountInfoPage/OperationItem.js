@@ -20,7 +20,6 @@ function OperationItem(props) {
                     <Row className="justify-content-between">
                         <Col xs="auto">Дата операции: {getFormattedDate(props.operation.dateTime)}</Col>
                         <Col xs="auto">Сумма операции: {props.operation.transactionAmount}</Col>
-                        <Col xs="auto">Какое-то fee: {props.operation.transactionFee}</Col>
                     </Row>
                 </Container>
             </ListGroup.Item>
