@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using core_service.Models;
 
 //RabbitMQ connection
-var factory = new ConnectionFactory { HostName = "localhost" };
+/*var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection1 = factory.CreateConnection();
 using var channel = connection1.CreateModel();
 
@@ -17,7 +17,7 @@ channel.QueueDeclare(queue: "accounts-operations",
                      durable: true,
                      exclusive: false,
                      autoDelete: false,
-                     arguments: null);
+                     arguments: null);*/
 
 /*var op = new CreateOperationDTO()
 {
@@ -39,7 +39,7 @@ while(a < 3)
                          body: body);
 }*/
 
-MessageBrokerHelp mbh = new MessageBrokerHelp();
+/*MessageBrokerHelp mbh = new MessageBrokerHelp();
 var consumer = new EventingBasicConsumer(channel);
 consumer.Received += async (sender, e) =>
 {
@@ -51,7 +51,7 @@ consumer.Received += async (sender, e) =>
 
 channel.BasicConsume(queue: "accounts-operations",
                      autoAck: true,
-                     consumer: consumer);
+                     consumer: consumer);*/
 
 var builder = WebApplication.CreateBuilder(args);
 
