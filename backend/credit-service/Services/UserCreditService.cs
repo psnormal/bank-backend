@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http.Json;
+using System.Security.Policy;
 using System.Text;
 using System.Text.Json.Serialization;
 using Azure;
@@ -97,7 +98,7 @@ namespace credit_service.Services
             var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
             CreditPayment creditPayment;
             //RabbitMQ connection 
-            var factory = new ConnectionFactory { HostName = "localhost" };
+            /*var factory = new ConnectionFactory { HostName = "localhost" };
             using var connection1 = factory.CreateConnection();
             using var channel = connection1.CreateModel();
 
@@ -105,10 +106,10 @@ namespace credit_service.Services
                                 durable: true,
                                 exclusive: false,
                                 autoDelete: false,
-                                arguments: null);
+                                arguments: null);*/
 
 
-            if (credit.NumOfOverduePayouts > 0)
+            /*if (credit.NumOfOverduePayouts > 0)
             {
                 for(int j = credit.NumOfOverduePayouts; j>0; j--)
                 {
@@ -128,7 +129,7 @@ namespace credit_service.Services
                         creditPayment.IsSuccessful = false;
                     }
                 }
-            }
+            }*/
 
             if (credit.LoanBalance <= credit.PayoutAmount)
             {
@@ -155,10 +156,18 @@ namespace credit_service.Services
                 var resultContent = await response.Content.ReadFromJsonAsync<AccountInfo>();
                 if (resultContent.Balance >= creditPayment.PayoutAmount)
                 {
+                    var url2 = "https://localhost:7139/api/operation/create";
+                    var operation = new OperationInfo(credit.AccountNum, creditPayment.PayoutAmount);
+                    JsonContent content = JsonContent.Create(operation);
+                    var response2 = await client.PostAsync(url2, content);
 
-                    credit.LoanBalance = credit.LoanBalance - creditPayment.PayoutAmount;
-                    creditPayment.IsOverdue = false;
-                    creditPayment.IsSuccessful = true;
+                    if (response2.IsSuccessStatusCode)
+                    {
+                        credit.LoanBalance = credit.LoanBalance - creditPayment.PayoutAmount;
+                        creditPayment.IsOverdue = false;
+                        creditPayment.IsSuccessful = true;
+                    }
+
                 }
                 else
                 {
