@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import API from '../../api/api';
 import { IHistory } from '../../api/types';
 import { userAccounts, userInfo } from '../../constData/constData';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
 const titleData = {
     first: 'Показать историю операций счета клиента: ',
@@ -15,19 +16,28 @@ const HistoryOperationAccounts: React.FC = () => {
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [history, setHistory] = useState<IHistory>();
 
-    // const hubConnection = new signalR.HubConnectionBuilder()
-    //     .withUrl('https://localhost:7139/websoket/query/clientAccount/getHistory')
-    //     .configureLogging(signalR.LogLevel.Information)
-    //     .build();
+    const [connection, setConnection] = useState<HubConnection>();
+    const [historyOperations, setHistoryOperations] = useState<any>([]);
 
-    // hubConnection.start().then((a) => {
-    //         if (hubConnection.connectionId) {
-    //             hubConnection.on('GetHistory', (message) => {
-                
-    //             });
-    //             hubConnection.invoke('SendHistory', numberAccount);
-    //         }
-    // });
+    const operations = async (dateTime: any, transactionAmount: any) => {
+        try {
+            const connection = new HubConnectionBuilder()
+                .withUrl('https://localhost')
+                .configureLogging(LogLevel.Information)
+                .build();
+
+            connection.on('GetHistory', (dateTime, transactionAmount) => {
+                setHistoryOperations((historyOperations: any) => [...historyOperations, { dateTime, transactionAmount }]);
+            });
+
+            await connection.start();
+            await connection.invoke('SendHistory', numberAccount);
+            setConnection(connection);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    console.log(operations);
 
     const onChange = useCallback((value: number) => {
         setNumberAccount(value);
