@@ -1,5 +1,6 @@
 import { UserApi } from "../../api/UserApi";
 import { CoreApi } from "../../api/CoreApi";
+import { CreditApi } from "../../api/CreditApi";
 
 const SET_CLIENTS = 'SET_CLIENTS';
 const UPDATE_NEW_CLIENT = 'UPDATE_NEW_CLIENT';

@@ -1,5 +1,6 @@
 import React from "react";
-import { ListGroup, Row, Col, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { ListGroup, Row, Col, Button, Nav } from 'react-bootstrap';
 import ClientAccountsList from "./ClientAccountsList";
 
 function ClientItem(props) {
@@ -8,7 +9,7 @@ function ClientItem(props) {
             <ListGroup.Item className="px-6 py-3">
                 <Row className="justify-content-between align-items-center">
                     <Col>
-                        <span>{props.client.name} {props.client.lastname}</span>
+                        <p>{props.client.name} {props.client.lastname}</p>
                     </Col>
                     <Col xs="auto">
                         <Button variant="danger" className="text-wrap float-end"
@@ -18,7 +19,12 @@ function ClientItem(props) {
                         </Button>
                     </Col>
                 </Row>
-                <ClientAccountsList accounts={props.client.accounts} userId={props.client.userID}/>
+                <ClientAccountsList accounts={props.client.accounts} userId={props.client.userID} />
+                <Nav.Link as={Link} to={`/credits/${props.client.userID}`}>
+                    <Button variant="info" className="mt-3">
+                        Кредитная информация
+                    </Button>
+                </Nav.Link>
             </ListGroup.Item>
         </>
     )

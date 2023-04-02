@@ -40,7 +40,7 @@ export const UserApi = {
         });
     },
 
-     getAllUsers() {
+    getAllUsers() {
          return coreInstanse.get('User/AllUsers')
          .then(response => {
              if (response.status === 200) {
