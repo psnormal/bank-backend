@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux'
-import { createNewClientThunkCreator, setNewClientActionCreator } from "../../../store/reducers/ClientsReducer";
+import { createNewClientThunkCreator, updateNewClientActionCreator } from "../../../store/reducers/ClientsReducer";
 import NewClientCreationForm from "./NewClientCreationForm";
 
 
@@ -13,7 +13,7 @@ class NewClientCreationFormContainer extends React.Component {
             <>
                 <NewClientCreationForm newClient={this.props.newClient}
                     createClient={this.props.createNewClientThunkCreator}
-                    setClient={this.props.setNewClientActionCreator} />
+                    updateClient={this.props.updateNewClientActionCreator} />
             </>
         )
     }
@@ -26,4 +26,4 @@ let mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, { createNewClientThunkCreator, setNewClientActionCreator })(NewClientCreationFormContainer)
+export default connect(mapStateToProps, { createNewClientThunkCreator, updateNewClientActionCreator })(NewClientCreationFormContainer)

@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { createNewCreditRateThunkCreator, setNewCreditRateActionCreator } from "../../../store/reducers/CreditsReducer";
+import { createNewCreditRateThunkCreator, updateNewCreditRateActionCreator } from "../../../store/reducers/CreditsReducer";
 import NewCreditRateCreationForm from "./NewCrediRateCreationForm";
 
 
@@ -13,7 +13,7 @@ class NewCreditRateCreationFormContainer extends React.Component {
             <>
                 <NewCreditRateCreationForm newCreditRate={this.props.newCreditRate}
                     createCreditRate={this.props.createNewCreditRateThunkCreator}
-                    setCreditRate={this.props.setNewCreditRateActionCreator} />
+                    updateCreditRate={this.props.updateNewCreditRateActionCreator} />
             </>
         )
     }
@@ -26,4 +26,4 @@ let mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, { createNewCreditRateThunkCreator, setNewCreditRateActionCreator })(NewCreditRateCreationFormContainer)
+export default connect(mapStateToProps, { createNewCreditRateThunkCreator, updateNewCreditRateActionCreator })(NewCreditRateCreationFormContainer)

@@ -1,6 +1,7 @@
 ﻿using core_service.Services;
 using core_service.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace core_service.Controllers
 {
@@ -9,10 +10,12 @@ namespace core_service.Controllers
     public class OperationController : ControllerBase
     {
         private IOperationService _operationService;
+        IHubContext<OperationsHub> _hubContext;
 
-        public OperationController(IOperationService operationService)
+        public OperationController(IOperationService operationService, IHubContext<OperationsHub> hubContext)
         {
             _operationService = operationService;
+            _hubContext = hubContext;
         }
 
         [HttpPost]
@@ -27,6 +30,7 @@ namespace core_service.Controllers
             try
             {
                 await _operationService.CreateOperation(model);
+                await GetOperations(model.UserID, model.AccountNumber);
                 return Ok();
             }
             catch (Exception ex)
@@ -48,8 +52,8 @@ namespace core_service.Controllers
         }
 
         [HttpGet]
-        [Route("account/{id}/operations/{page}")]
-        public ActionResult<InfoOperationsDTO> GetOperations(Guid UserID, int id, int page)
+        [Route("account/{id}/operations")]
+        public async Task<IActionResult> GetOperations(Guid UserID, int id)
         {
             if (!ModelState.IsValid)
             {
@@ -58,7 +62,12 @@ namespace core_service.Controllers
 
             try
             {
-                return _operationService.GetOperations(UserID, id, page);
+                var operationsList = _operationService.GetOperations(UserID, id);
+                string groupName = id.ToString();
+                await _hubContext.Clients.Group(groupName).SendAsync("GetOperations", operationsList);
+                //await _hubContext.Clients.All.SendAsync("GetOperations", operationsList);
+                //return _operationService.GetOperations(UserID, id);
+                return Ok();
             }
             catch (Exception ex)
             {

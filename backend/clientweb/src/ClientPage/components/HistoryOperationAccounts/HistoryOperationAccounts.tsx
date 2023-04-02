@@ -2,9 +2,10 @@ import React, { useCallback, useMemo, useState } from 'react';
 import API from '../../api/api';
 import { IHistory } from '../../api/types';
 import { userAccounts, userInfo } from '../../constData/constData';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
 const titleData = {
-    first: 'Показать историю операция счета клиента: ',
+    first: 'Показать историю операций счета клиента: ',
     second: 'История операций счета № ', 
     third: 'Неправильно введен номер счета'
 }
@@ -14,6 +15,29 @@ const HistoryOperationAccounts: React.FC = () => {
     const [numberAccount, setNumberAccount] = useState<number>();
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [history, setHistory] = useState<IHistory>();
+
+    const [connection, setConnection] = useState<HubConnection>();
+    const [historyOperations, setHistoryOperations] = useState<any>([]);
+
+    const operations = async (dateTime: any, transactionAmount: any) => {
+        try {
+            const connection = new HubConnectionBuilder()
+                .withUrl('https://localhost')
+                .configureLogging(LogLevel.Information)
+                .build();
+
+            connection.on('GetHistory', (dateTime, transactionAmount) => {
+                setHistoryOperations((historyOperations: any) => [...historyOperations, { dateTime, transactionAmount }]);
+            });
+
+            await connection.start();
+            await connection.invoke('SendHistory', numberAccount);
+            setConnection(connection);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    console.log(operations);
 
     const onChange = useCallback((value: number) => {
         setNumberAccount(value);
@@ -38,7 +62,7 @@ const HistoryOperationAccounts: React.FC = () => {
         setTitle(titleData.second + numberAccount);
 
         if (numberAccount) {
-            const result = await API.getHistory(userInfo.userId, numberAccount, 1);
+            const result = await API.getHistory(userInfo.userId, numberAccount);
             setHistory(result);
         }
         else {

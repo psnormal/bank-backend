@@ -1,7 +1,8 @@
 import { UserApi } from "../../api/UserApi";
+import { CoreApi } from "../../api/CoreApi";
 
 const SET_CLIENTS = 'SET_CLIENTS';
-const SET_NEW_CLIENT = 'SET_NEW_CLIENT';
+const UPDATE_NEW_CLIENT = 'UPDATE_NEW_CLIENT';
 const CLEAR_NEW_CLIENT = 'CLEAR_NEW_CLIENT';
 
 let initialState = {
@@ -14,28 +15,35 @@ let initialState = {
 }
 
 const ClientsReducer = (state = initialState, action) => {
-    let newState = { ...state };
     switch (action.type) {
         case SET_CLIENTS: {
-            newState.clients = action.clients;
-            return newState;
+            return {
+                ...state,
+                clients: action.clients
+            }
         }
-        case SET_NEW_CLIENT: {
-            newState.newClient = action.newClient;
-            return newState;
+        case UPDATE_NEW_CLIENT: {
+            return {
+                ...state,
+                newClient: action.newClient
+            }
         }
         case CLEAR_NEW_CLIENT: {
-            newState.newClient.name = '';
-            newState.newClient.lastname = '';
-            newState.newClient.password = '';
-            return newState;
+            return {
+                ...state,
+                newClient: {
+                    name: '',
+                    lastname: '',
+                    password: ''
+                }
+            }
         }
         default:
             return state;
     }
 };
 
-// Actions
+// ACTIONS
 // ќбновить массив клиентов после получени€ данных с сервера
 export const setClientsActionCreator = (clients) => {
     return {
@@ -44,9 +52,9 @@ export const setClientsActionCreator = (clients) => {
     }
 };
 // ќбновить состо€ние создаваемого клиента
-export const setNewClientActionCreator = (newClient) => {
+export const updateNewClientActionCreator = (newClient) => {
     return {
-        type: SET_NEW_CLIENT,
+        type: UPDATE_NEW_CLIENT,
         newClient: newClient
     }
 }
@@ -57,41 +65,59 @@ export const clearNewClientActionCreator = () => {
     }
 }
 
-// Thunks
-// ѕолучить всех клиентов с сервера
+// THUNKS
+// ѕолучить всех клиентов и их счета с сервера
+const connectClientsAndAccounts = async (clients) => {
+    await Promise.all(clients.map(client => {
+        return CoreApi.getAllUserAccounts(client.userID)
+            .then(data => {
+                client.accounts = [...data.accounts];
+            })
+    }))
+
+    return clients;
+}
 export const getClientsThunkCreator = () => {
     return (dispatch) => {
         UserApi.getAllUsers()
-            .then(data => {
-                data = data.filter(client => client.role == 0)
-                dispatch(setClientsActionCreator(data));
-            })
-    }
-}
-// «аблокировать сотрудника на сервере
-export const blockAnClientThunkCreator = (clientId) => {
-    return (dispatch) => {
-        UserApi.blockUser(clientId)
-            .then(() => {
-                console.log('user was blocked')
-                UserApi.getAllUsers()
-                    .then(data => {
-                        data = data.filter(client => client.role == 0)
-                        dispatch(setClientsActionCreator(data));
+            .then(allUsers => {
+                let allClients = allUsers.filter(user => user.role == 0);
+                connectClientsAndAccounts(allClients)
+                    .then(allClientsWithAccounts => {
+                        dispatch(setClientsActionCreator(allClientsWithAccounts));
                     })
             })
     }
 }
-// —оздать сотрудника на сервере
-export const createNewClientThunkCreator = (name, lastname, password) => {
+// «аблокировать клиента на сервере
+export const blockAnClientThunkCreator = (clientId) => {
     return (dispatch) => {
-        UserApi.registerClient(name, lastname, password)
+        UserApi.blockUser(clientId)
             .then(() => {
-                dispatch(clearNewClientActionCreator)
                 UserApi.getAllUsers()
-                    .then(data => {
-                        data = data.filter(client => client.role == 0)
-                        dispatch(setClientsActionCreator(data));
+                    .then(allUsers => {
+                        let allClients = allUsers.filter(user => user.role == 0);
+                        connectClientsAndAccounts(allClients)
+                            .then(allClientsWithAccounts => {
+                                dispatch(setClientsActionCreator(allClientsWithAccounts));
+                            })
+                    })
+            })
+    }
+}
+// —оздать клиента на сервере
+export const createNewClientThunkCreator = (newClient) => {
+    return (dispatch) => {
+        UserApi.registerClient(newClient.name, newClient.lastname, newClient.password)
+            .then(() => {
+                dispatch(clearNewClientActionCreator())
+                UserApi.getAllUsers()
+                    .then(allUsers => {
+                        let allClients = allUsers.filter(user => user.role == 0);
+                        connectClientsAndAccounts(allClients)
+                            .then(allClientsWithAccounts => {
+                                dispatch(setClientsActionCreator(allClientsWithAccounts));
+                            })
                     })
             })
     }

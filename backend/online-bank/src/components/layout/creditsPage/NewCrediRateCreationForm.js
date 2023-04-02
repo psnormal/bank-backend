@@ -6,8 +6,16 @@ function NewCreditRateCreationForm(props) {
     const descriptionRef = React.createRef();
     const interestRateRef = React.createRef();
 
+    let collectFormData = () => {
+        return {
+            title: titleRef.current.value,
+            description: descriptionRef.current.value,
+            interestRate: interestRateRef.current.value
+        }
+    }
+
     return (
-        <Card className="mb-4 mx-auto" style={{ width: '800px' }}>
+        <Card className="mb-4 mx-auto" style={{ maxWidth: '800px' }}>
             <Card.Body>
                 <h3 className="text-center">Создать новый кредитный тариф</h3>
                 <Form>
@@ -15,48 +23,34 @@ function NewCreditRateCreationForm(props) {
                         <Form.Label>Название</Form.Label>
                         <Form.Control type="text"
                             placeholder="Введите название нового тарифа"
-                            defaultValue={props.newCreditRate.title}
+                            value={props.newCreditRate.title}
                             ref={titleRef}
                             onChange={() => {
-                                props.setCreditRate({
-                                    title: titleRef.current.value,
-                                    description: descriptionRef.current.value,
-                                    interestRate: interestRateRef.current.value
-                                })
+                                props.updateCreditRate(collectFormData())
                             }} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="description">
                         <Form.Label>Описание</Form.Label>
                         <Form.Control as="textarea" rows={3}
                             placeholder="Введите описание нового тарифа"
-                            defaultValue={props.newCreditRate.description}
+                            value={props.newCreditRate.description}
                             ref={descriptionRef}
                             onChange={() => {
-                                props.setCreditRate({
-                                    title: titleRef.current.value,
-                                    description: descriptionRef.current.value,
-                                    interestRate: interestRateRef.current.value
-                                })
+                                props.updateCreditRate(collectFormData())
                             }} />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="rate">
                         <Form.Label>Процентная ставка</Form.Label>
                         <Form.Control type="text"
                             placeholder="Введите процентную ставку нового тарифа"
-                            defaultValue={props.newCreditRate.interestRate}
+                            value={props.newCreditRate.interestRate}
                             ref={interestRateRef}
                             onChange={() => {
-                                props.setCreditRate({
-                                    title: titleRef.current.value,
-                                    description: descriptionRef.current.value,
-                                    interestRate: interestRateRef.current.value
-                                })
+                                props.updateCreditRate(collectFormData())
                             }} />
                     </Form.Group>
                     <Button variant="primary" type="button" onClick={(e) => {
-                        props.createCreditRate(titleRef.current.value,
-                            descriptionRef.current.value,
-                            interestRateRef.current.value)
+                        props.createCreditRate(props.newCreditRate)
                     }}>
                         Создать
                     </Button>

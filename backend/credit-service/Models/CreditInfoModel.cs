@@ -7,11 +7,11 @@ namespace credit_service.Models
         public double InterestRate { get; set; }
         public DateTime MaturityDate { get; set; }
         public int PaymentTerm { get; set; }
-        public double LoanAmount { get; set; }//размер кредита
-        public double PayoutAmount { get; set; }//платеж
+        public decimal LoanAmount { get; set; }//размер кредита
+        public decimal PayoutAmount { get; set; }//платеж
         public CreditStatus Status { get; set; }
         public int AccountNum { get; set; }
-        public double? LoanBalance { get; set; }//остаток
+        public decimal? LoanBalance { get; set; }//остаток
 
         public CreditInfoModel(Credit model, string creditRateTitle, double interestRate)
 		{

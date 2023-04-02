@@ -7,8 +7,16 @@ class API{
     credit = 'https://localhost:7239/';
 
     //GET информация о кредитах
-    async getCreditRates(){
-        const res = await fetch(this.credit + `api/CreditRate/AllCreditRates`).then(response => 
+    getCreditRates(){
+        const res = fetch(this.credit + `api/CreditRate/AllCreditRates`).then(response => 
+            response.json()
+        );
+        return res;
+    };
+
+    //GET информация о кредитах клиента
+    getUserCredits(userId: string){
+        const res = fetch(this.credit + `api/UserCredit/userCredits?userId=${userId}`).then(response => 
             response.json()
         );
         return res;
@@ -17,6 +25,22 @@ class API{
     //GET информация о клиенте
     getClientInformation(userId: string) {
         const response = fetch(this.client + `api/User/${userId}/ClientInformation`).then(response => 
+            response.json()
+        );
+        return response;
+    };
+
+    //GET информация о кредитном рейтинге клиента
+    getCreditRating(userId: string) {
+        const response = fetch(this.credit + `api/CreditRating/${userId}`).then(response => 
+            response.json()
+        );
+        return response;
+    };
+
+    //GET информация о задолженностях по кредиту
+    getOverduePayments(userId: string, creditId: string) {
+        const response = fetch(this.credit + `api/UserCredit/userCredits/${userId}/overduePayments?creditId=${creditId}`).then(response => 
             response.json()
         );
         return response;
@@ -39,8 +63,8 @@ class API{
     };
 
     //GET история операций по счету
-    async getHistory(userId: string, id: number, page: number){
-        const res = await fetch(this.core + `api/account/${id}/operations/${page}?UserID=${userId}`).then(response => 
+    async getHistory(userId: string, id: number){
+        const res = await fetch(this.core + `api/account/${id}/operations?UserID=${userId}`).then(response => 
             response.json()
         );
         return res;
@@ -73,14 +97,13 @@ class API{
 	}
 
     //POST взять кредит
-    async takeCredit(userId: string, credit: string, numberAccount: number, date: string, paymentTerm: number, loanAmount: number){
+    async takeCredit(userId: string, credit: string, paymentTerm: number, loanAmount: number){
         const body = {
-            maturityDate: date,
             paymentTerm: paymentTerm,
             loanAmount: loanAmount,
         };
         const blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-		const res = await fetch(this.core + `api/UserCredit/${credit}/takeCredit?userId=${userId}&accountNum=${numberAccount}`, {method: 'post', body: blob }).then(res=>res.json());
+		const res = await fetch(this.core + `api/UserCredit/${credit}/takeCredit?userId=${userId}`, {method: 'post', body: blob }).then(res=>res.json());
         return res;
 	}
 
