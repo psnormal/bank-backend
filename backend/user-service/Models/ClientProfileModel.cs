@@ -7,6 +7,7 @@ namespace user_service.Models
         public string Name { get; set; }
         public string Lastname { get; set; }
         public Roles Role { get; set; }
+        public UserStatus Status { get; set; }
 
         public ClientProfileModel(User user)
         {
@@ -14,6 +15,7 @@ namespace user_service.Models
             this.Name = user.Name;
             this.Lastname = user.Lastname;
             this.Role = user.Role;
+            Status = user.Status;
         }
     }
 }

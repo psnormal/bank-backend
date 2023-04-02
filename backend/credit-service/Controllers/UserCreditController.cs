@@ -23,6 +23,40 @@ namespace credit_service.Controllers
             _userCreditService = userCreditService;
         }
 
+        /*[Route("users")]
+        [HttpGet]
+        public async Task<string> Get()
+        {
+            var userId = "08db2dec-2235-4450-869a-775a5f04b868";
+            var url = $"https://localhost:7099/api/User/{userId}/name";
+            using var client = new HttpClient();
+            var response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                return content;
+            }
+            return "Это не работает:(";
+        }*/
+
+        [Route("userCredits/{userId}/overduePayments")]
+        [HttpGet]
+        public async Task<List<OverduePaymentDTO>> Get(Guid creditId, Guid userId, string? String)
+        {
+            var creditPayments = await _context.CreditPayments.Where(x => x.CreditId == creditId).ToListAsync();
+            var overdueCreditPayments = new List<OverduePaymentDTO>();
+            OverduePaymentDTO overduePayment;
+            for (int i = 0; i < creditPayments.Count(); i++)
+            {
+                if (creditPayments[i].IsOverdue == true)
+                {
+                    overduePayment = new OverduePaymentDTO(creditPayments[i]);
+                    overdueCreditPayments.Add(overduePayment);
+                }
+            }
+            return overdueCreditPayments;
+        }
+
         [Route("userCredits")]
         [HttpGet]
         public async Task<List<ShortCreditModel>> Get(Guid userId)
@@ -45,7 +79,7 @@ namespace credit_service.Controllers
         }
 
         [HttpGet("{userId}/credits/{creditId}/loanBalance")]
-        public async Task<ActionResult<double>> GetLoanBalance(Guid creditId)
+        public async Task<ActionResult<decimal>> GetLoanBalance(Guid creditId)
         {
             var credit = await _context.Credit.Where(x => x.CreditId == creditId).FirstOrDefaultAsync();
             if (credit == null)
@@ -58,12 +92,12 @@ namespace credit_service.Controllers
 
         [Route("{creditRateId}/takeCredit")]
         [HttpPost]
-        public async Task<IActionResult> Post(Guid creditRateId, Guid userId, int accountNum, [FromBody]CreditTakingDto model)
+        public async Task<IActionResult> Post(Guid creditRateId, Guid userId, [FromBody]CreditTakingDto model)
         {
             Credit newRate = null;
             try
             {
-                newRate = await _userCreditService.AddNewCredit(creditRateId, userId, accountNum, model);
+                newRate = await _userCreditService.AddNewCredit(creditRateId, userId, model);
             }
             catch (ArgumentException)
             {
@@ -88,7 +122,7 @@ namespace credit_service.Controllers
         }
 
         [HttpPut("{userId}/credits/{creditId}/lastPayment")]
-        public async Task<IActionResult> Put(Guid userId, Guid creditId, double paymentAmount)
+        public async Task<IActionResult> Put(Guid userId, Guid creditId, decimal paymentAmount)
         {
             Credit credit = null;
             try
