@@ -5,11 +5,6 @@ export interface IAccount {
     type: number,
 }
 
-export interface IClientInformation {
-    name: string,
-    lastname: string,
-}
-
 export interface IOperation {
     accountNumber: number,
     dateTime: string,
@@ -25,4 +20,19 @@ export interface ICredit {
     title: string,
     isActive: number,
     creditRateId: string,
+}
+
+export interface IOverduePayment {
+    creditPaymentId: string,
+    creditId: string,
+    payoutAmount: number,
+    paymentDate: string,
+}
+
+export interface ICreditUsers {
+    creditID: string;
+    creditRateTitle: string,
+    intersestRate: number,
+    status: number,
+    loanBalance: number,
 }

@@ -13,11 +13,21 @@ const UserAccounts: React.FC = () => {
     const [openAccounts, setOpenAccounts] = useState<IAccount[]>();
     const [closedAccounts, setClosedAccounts] = useState<IAccount[]>();
 
-    const [title, setTitle] = useState<string>(titleData.first);
+    const [title, setTitle] = useState<string>(titleData.second);
+    //const [b, bb] = useState<number>();
+
+    useEffect(() => {
+        if (openAccounts && closedAccounts) {
+            setTimeout(async () => {
+                const accounts = await API.getAccountsAll(userInfo.userId);
+                setOpenAccounts(accounts.accounts.filter((item: IAccount) => item.state === 0));
+                setClosedAccounts(accounts.accounts.filter((item: IAccount) => item.state === 1));
+            }, 3000);
+        }
+    });
 
     const show = useCallback(async() => {
         setTitle(titleData.second);
-
         const accounts = await API.getAccountsAll(userInfo.userId);
 
         setOpenAccounts(accounts.accounts.filter((item: IAccount) => item.state === 0));
