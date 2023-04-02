@@ -4,7 +4,7 @@ import { IHistory } from '../../api/types';
 import { userAccounts, userInfo } from '../../constData/constData';
 
 const titleData = {
-    first: 'Показать историю операция счета клиента: ',
+    first: 'Показать историю операций счета клиента: ',
     second: 'История операций счета № ', 
     third: 'Неправильно введен номер счета'
 }
@@ -14,6 +14,20 @@ const HistoryOperationAccounts: React.FC = () => {
     const [numberAccount, setNumberAccount] = useState<number>();
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [history, setHistory] = useState<IHistory>();
+
+    // const hubConnection = new signalR.HubConnectionBuilder()
+    //     .withUrl('https://localhost:7139/websoket/query/clientAccount/getHistory')
+    //     .configureLogging(signalR.LogLevel.Information)
+    //     .build();
+
+    // hubConnection.start().then((a) => {
+    //         if (hubConnection.connectionId) {
+    //             hubConnection.on('GetHistory', (message) => {
+                
+    //             });
+    //             hubConnection.invoke('SendHistory', numberAccount);
+    //         }
+    // });
 
     const onChange = useCallback((value: number) => {
         setNumberAccount(value);
@@ -38,7 +52,7 @@ const HistoryOperationAccounts: React.FC = () => {
         setTitle(titleData.second + numberAccount);
 
         if (numberAccount) {
-            const result = await API.getHistory(userInfo.userId, numberAccount, 1);
+            const result = await API.getHistory(userInfo.userId, numberAccount);
             setHistory(result);
         }
         else {

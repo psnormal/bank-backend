@@ -16,6 +16,15 @@ const ClientAccountInfo: React.FC = () => {
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [account, setAccount] = useState<IAccount>();
 
+    useEffect(() => {
+        if (account && numberAccount) {
+            setTimeout(async () => {
+                const accounts = await API.getAccount(userInfo.userId, parseInt(numberAccount));
+                setAccount(accounts);
+            }, 3000);
+        }
+    });
+
     const onChange = useCallback((value: string) => {
         setNumberAccount(value);
     }, []);
