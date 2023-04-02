@@ -26,7 +26,6 @@ channel.QueueDeclare(queue: "accounts-operations",
     DateTime = DateTime.Now,
     TransactionAmount = 30
 };
-
 var a = 0;
 while(a < 3)
 {
@@ -70,16 +69,7 @@ builder.Services.AddScoped<IOperationService, OperationService>();
 
 //DB connection:
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
-
-//подключение через помелу
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(
-            dbContextOptions => dbContextOptions
-                .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                .LogTo(Console.WriteLine, LogLevel.Information)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors());
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
 
 var app = builder.Build();
 

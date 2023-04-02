@@ -95,9 +95,12 @@ export const blockAnClientThunkCreator = (clientId) => {
         UserApi.blockUser(clientId)
             .then(() => {
                 UserApi.getAllUsers()
-                    .then(data => {
-                        data = data.filter(client => client.role == 0)
-                        dispatch(setClientsActionCreator(data));
+                    .then(allUsers => {
+                        let allClients = allUsers.filter(user => user.role == 0);
+                        connectClientsAndAccounts(allClients)
+                            .then(allClientsWithAccounts => {
+                                dispatch(setClientsActionCreator(allClientsWithAccounts));
+                            })
                     })
             })
     }
@@ -109,9 +112,12 @@ export const createNewClientThunkCreator = (newClient) => {
             .then(() => {
                 dispatch(clearNewClientActionCreator())
                 UserApi.getAllUsers()
-                    .then(data => {
-                        data = data.filter(client => client.role == 0)
-                        dispatch(setClientsActionCreator(data));
+                    .then(allUsers => {
+                        let allClients = allUsers.filter(user => user.role == 0);
+                        connectClientsAndAccounts(allClients)
+                            .then(allClientsWithAccounts => {
+                                dispatch(setClientsActionCreator(allClientsWithAccounts));
+                            })
                     })
             })
     }

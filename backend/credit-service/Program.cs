@@ -19,14 +19,14 @@ builder.Services.AddHostedService<RepeatingService>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDbContext<Context>(
+/*builder.Services.AddDbContext<Context>(
             dbContextOptions => dbContextOptions
                 .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
-                .EnableDetailedErrors());
+                .EnableDetailedErrors());*/
 
 var app = builder.Build();
 
