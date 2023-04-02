@@ -26,7 +26,7 @@ namespace credit_service.Models
 			this.CreditRateId = creditRateId;
 			this.AccountNum = accountNum;
 			this.MaturityDate = new DateTime();
-			this.MaturityDate = model.MaturityDate;
+			this.MaturityDate = DateTime.Now;
 			this.PaymentTerm = model.PaymentTerm;
 			this.LoanAmount = model.LoanAmount;
 			this.Status = CreditStatus.notRepaid;

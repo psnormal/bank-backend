@@ -27,6 +27,17 @@ namespace credit_service.Models
 			IsOverdue = false;
 			IsSuccessful = true;
 		}
+
+		public CreditPayment(Credit credit, decimal payoutAmount)
+		{
+            CreditId = credit.CreditId;
+            Credit = credit;
+            PaymentDate = DateTime.Now;
+			PayoutAmount = payoutAmount;
+            IsLast = false;
+            IsOverdue = false;
+            IsSuccessful = true;
+        }
 	}
 }
 

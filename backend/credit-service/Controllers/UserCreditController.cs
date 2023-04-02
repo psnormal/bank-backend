@@ -23,7 +23,7 @@ namespace credit_service.Controllers
             _userCreditService = userCreditService;
         }
 
-        [Route("users")]
+        /*[Route("users")]
         [HttpGet]
         public async Task<string> Get()
         {
@@ -37,6 +37,24 @@ namespace credit_service.Controllers
                 return content;
             }
             return "Это не работает:(";
+        }*/
+
+        [Route("userCredits/{userId}/overduePayments")]
+        [HttpGet]
+        public async Task<List<OverduePaymentDTO>> Get(Guid creditId, Guid userId, string? String)
+        {
+            var creditPayments = await _context.CreditPayments.Where(x => x.CreditId == creditId).ToListAsync();
+            var overdueCreditPayments = new List<OverduePaymentDTO>();
+            OverduePaymentDTO overduePayment;
+            for (int i = 0; i < creditPayments.Count(); i++)
+            {
+                if (creditPayments[i].IsOverdue == true)
+                {
+                    overduePayment = new OverduePaymentDTO(creditPayments[i]);
+                    overdueCreditPayments.Add(overduePayment);
+                }
+            }
+            return overdueCreditPayments;
         }
 
         [Route("userCredits")]
@@ -74,12 +92,12 @@ namespace credit_service.Controllers
 
         [Route("{creditRateId}/takeCredit")]
         [HttpPost]
-        public async Task<IActionResult> Post(Guid creditRateId, Guid userId, int accountNum, [FromBody]CreditTakingDto model)
+        public async Task<IActionResult> Post(Guid creditRateId, Guid userId, [FromBody]CreditTakingDto model)
         {
             Credit newRate = null;
             try
             {
-                newRate = await _userCreditService.AddNewCredit(creditRateId, userId, accountNum, model);
+                newRate = await _userCreditService.AddNewCredit(creditRateId, userId, model);
             }
             catch (ArgumentException)
             {
