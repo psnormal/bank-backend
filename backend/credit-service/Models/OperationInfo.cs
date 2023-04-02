@@ -5,16 +5,16 @@ namespace credit_service.Models
 {
 	public class OperationInfo
 	{
+        public Guid UserID { get; set; }
         public int AccountNumber { get; set; }
         public DateTime DateTime { get; set; }
         public decimal TransactionAmount { get; set; }
-        public decimal? TransactionFee { get; set; }
-        public OperationInfo(int accountNum, decimal amount)
+        public OperationInfo(Guid userId,int accountNum, decimal amount)
 		{
+            UserID = userId;
             AccountNumber = accountNum;
             DateTime = DateTime.Now;
             TransactionAmount = amount;
-            TransactionFee = 0;
 		}
 	}
 }
