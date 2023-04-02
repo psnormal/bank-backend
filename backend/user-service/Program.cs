@@ -15,7 +15,7 @@ builder.Services.AddScoped<IHashService, HashService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddDbContext<Context>(
             dbContextOptions => dbContextOptions

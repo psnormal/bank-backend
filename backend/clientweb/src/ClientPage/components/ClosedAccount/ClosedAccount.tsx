@@ -57,14 +57,15 @@ const ClosedAccount: React.FC = () => {
     const withdrawal = async () => {
         const date = (new Date()).toISOString();
         if (numberAccount && balanceAccount) {
-            await API.createOperation(userInfo.userId, numberAccount, date, balanceAccount);
             setTitle(titleData.forth);
+            await API.createOperation(userInfo.userId, numberAccount, date, -balanceAccount);
         }
     };
 
     const ok = async () => {
         if (numberAccount) {
             await API.changeAccountState(userInfo.userId, 1, numberAccount);
+            setTitle(titleData.first);
         }
     };
 
@@ -72,6 +73,7 @@ const ClosedAccount: React.FC = () => {
         setTitle(titleData.first);
     };
 
+    console.log(title);
     return (
         <blockquote style={{ background: '#FFFFFF', border: 'solid', borderColor: '#000080', padding: '10px', marginTop: '10px' }}>
             <p style={{ margin: '0px' }}>{title}</p>

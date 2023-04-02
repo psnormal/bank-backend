@@ -1,8 +1,8 @@
 import { UserApi } from "../../api/UserApi";
 
 const SET_EMPLOYEES = 'SET_EMPLOYEES';
-const BLOCK_EMPLOYEE = 'BLOCK_EMPLOYEE';
-const SET_NEW_EMPLOYEE = 'SET_NEW_EMPLOYEE';
+const UPDATE_NEW_EMPLOYEE = 'UPDATE_NEW_EMPLOYEE';
+const CLEAR_NEW_EMPLOYEE = 'CLEAR_NEW_EMPLOYEE';
 
 let initialState = {
     employees: [],
@@ -14,16 +14,28 @@ let initialState = {
 }
 
 const EmployeesReducer = (state = initialState, action) => {
-    let newState = {...state};
     switch(action.type) {
         case SET_EMPLOYEES: {
-            newState.employees = action.employees;
-            return newState;
+            return {
+                ...state,
+                employees : action.employees
+            }
         }
-        case BLOCK_EMPLOYEE: {return state;}
-        case SET_NEW_EMPLOYEE: {
-            newState.newEmployee = action.newEmp;
-            return newState;
+        case UPDATE_NEW_EMPLOYEE: {
+            return {
+                ...state,
+                newEmployee : action.newEmp
+            }
+        }
+        case CLEAR_NEW_EMPLOYEE: {
+            return {
+                ...state,
+                newEmployee: {
+                    name: '',
+                    lastname: '',
+                    password: ''
+                }
+            }
         }
         default:
             return state;
@@ -31,53 +43,60 @@ const EmployeesReducer = (state = initialState, action) => {
 };
 
 // Actions
+// Обновить массив сотрудников после получения данных с сервера
 export const setEmployeesActionCreator = (employees) => {
-    return {type: SET_EMPLOYEES, 
-            employees: employees}
+    return {
+        type: SET_EMPLOYEES,
+        employees: employees
+    }
 };
-export const blockEmployeesActionCreator = (id) => {
-    return {type: BLOCK_EMPLOYEE, 
-            id: id}
-};
-export const setNewEmployeeActionCreator = (newEmployee) => {
-    return {type: SET_NEW_EMPLOYEE,
-            newEmp: newEmployee}
+// Обновить состояние создаваемого сотрудника
+export const updateNewEmployeeActionCreator = (newEmployee) => {
+    return {
+        type: UPDATE_NEW_EMPLOYEE,
+        newEmp: newEmployee
+    }
+}
+// Очистить данные о созданном сотруднике
+export const clearNewEmployeeActionCreator = () => {
+    return {
+        type: CLEAR_NEW_EMPLOYEE
+    }
 }
 
 // Thunks
+// Получить всех сотрудников с сервера
 export const getEmployeesThunkCreator = () => {
     return (dispatch) => {
         UserApi.getAllUsers()
         .then(data => {
-            // let allEmployees = data.filter(e => e.role == 'сотрудник')
+            data = data.filter(employee => employee.role == 1)
             dispatch(setEmployeesActionCreator(data));
         })
     }
 }
+// Заблокировать сотрудника на сервере
 export const blockAnEmployeeThunkCreator = (employeeId) => {
     return (dispatch) => {
         UserApi.blockUser(employeeId)
         .then(() => {
             UserApi.getAllUsers()
             .then(data => {
-                let allEmployees = data.filter(e => e.role === 'сотрудник')
-                dispatch(setEmployeesActionCreator(allEmployees));
+                data = data.filter(employee => employee.role == 1)
+                dispatch(setEmployeesActionCreator(data));
             })
         })
     }
 }
-export const createNewEmployeeThunkCreator = (name, lastname, password) => {
+// Создать сотрудника на сервере
+export const createNewEmployeeThunkCreator = (newEmp) => {
     return (dispatch) => {
-        UserApi.registerEmployee(name, lastname, password)
+        UserApi.registerEmployee(newEmp.name, newEmp.lastname, newEmp.password)
         .then(() => {
-            dispatch(setNewEmployeeActionCreator({
-                name: '',
-                lastname: '',
-                password: ''
-            }))
+            dispatch(clearNewEmployeeActionCreator())
             UserApi.getAllUsers()
             .then(data => {
-                // let allEmployees = data.filter(e => e.role == 'сотрудник')
+                data = data.filter(employee => employee.role == 1)
                 dispatch(setEmployeesActionCreator(data));
             })
         })

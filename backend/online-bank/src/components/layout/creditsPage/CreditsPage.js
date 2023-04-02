@@ -1,10 +1,11 @@
 import React from "react"
-import NewCreditRateCreationForm from "./NewCrediRateCreationForm"
+import NewCreditRateCreationFormContainer from "./NewCreditRateCreationFormContainer"
+
 
 function CreditsPage() {
     return (
         <>
-        <NewCreditRateCreationForm/>
+        <NewCreditRateCreationFormContainer/>
         </>
     )
 }

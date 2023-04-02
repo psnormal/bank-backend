@@ -7,7 +7,7 @@ namespace credit_service.Models
         public string CreditRateTitle { get; set; }
         public double InterestRate { get; set; }
         public CreditStatus Status { get; set; }
-        public double? LoanBalance { get; set; }//остаток
+        public decimal? LoanBalance { get; set; }//остаток
 
         public ShortCreditModel(Credit model, string creditRateTitle, double interestRate)
 		{

@@ -14,7 +14,7 @@ const ClientAccountInfo: React.FC = () => {
     const [title, setTitle] = useState<string>(titleData.first);
     const [numberAccount, setNumberAccount] = useState<string>();
     const [showInfo, setShowInfo] = useState<boolean>(false);
-    const [account, setAccount] = useState<IAccount[]>();
+    const [account, setAccount] = useState<IAccount>();
 
     useEffect(() => {
         if (account && numberAccount) {
@@ -35,6 +35,7 @@ const ClientAccountInfo: React.FC = () => {
 
         if (numberAccount) {
             const accounts = await API.getAccount(userInfo.userId, parseInt(numberAccount));
+            console.log(accounts);
             setAccount(accounts);
             //setAccount(userAccounts.accounts.filter(item => item.accountNumber.toString() === numberAccount));
         }
@@ -79,9 +80,7 @@ const ClientAccountInfo: React.FC = () => {
                 title='Скрыть' 
                 style={{ background: '#DCDCDC', borderWidth: 2, marginBlock: '10px', padding: '5px', borderRadius: 5 }}
             >Скрыть</button>)}
-            {showInfo && (account?.map(item => {
-                return (<p style={{ margin: '0px'}}>Номер счета: {item.accountNumber}<br/>Тип счета: {Type[item.type]}<br/>Статус счета: {State[item.state]}<br/>Баланс: {item.balance}</p>)
-            }))}
+            {showInfo && account && (<p style={{ margin: '0px' }}>Номер счета: {account?.accountNumber}<br />Тип счета: {Type[account?.type]}<br />Статус счета: {State[account?.state]}<br />Баланс: {account?.balance}</p>)}
         </blockquote>
     );
 }

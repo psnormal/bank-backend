@@ -14,10 +14,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ICreditRateService, CreditRateService>();
 builder.Services.AddScoped<IUserCreditService, UserCreditService>();
+builder.Services.AddScoped<ICreditRatingService, CreditRatingService>();
+builder.Services.AddHostedService<RepeatingService>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<Context>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddDbContext<Context>(
             dbContextOptions => dbContextOptions

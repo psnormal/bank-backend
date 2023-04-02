@@ -9,31 +9,32 @@ namespace credit_service.Models
 		public CreditRate CreditRate { get; set; }
 		public DateTime MaturityDate { get; set; }
 		public int PaymentTerm { get; set; }
-		public double LoanAmount { get; set; }//размер кредита
-		public double PayoutAmount { get; set; }//платеж
+		public decimal LoanAmount { get; set; }//размер кредита
+		public decimal PayoutAmount { get; set; }//платеж
 		public CreditStatus Status { get; set; }
 		public int AccountNum { get; set; }
-		public double? LoanBalance { get; set; }//остаток
-
-        public Credit()
+		public decimal LoanBalance { get; set; }//остаток
+		public int NumOfOverduePayouts { get; set; }
+		public List<CreditPayment> CreditPayments { get; set; }
+		public Credit()
 		{
 		}
 
-        public Credit(Guid userId, Guid creditRateId, int accountNum, double interestRate, CreditTakingModel model)
+        public Credit(Guid userId, Guid creditRateId, int accountNum, double interestRate, CreditTakingDto model)
         {
 			this.UserId = userId;
 			this.CreditRateId = creditRateId;
 			this.AccountNum = accountNum;
 			this.MaturityDate = new DateTime();
-			this.MaturityDate = model.MaturityDate;
+			this.MaturityDate = DateTime.Now;
 			this.PaymentTerm = model.PaymentTerm;
 			this.LoanAmount = model.LoanAmount;
 			this.Status = CreditStatus.notRepaid;
-			double monthInterestRate = (double)((double)interestRate / 12)/100;
-			double a = 1 + monthInterestRate;
-			this.PayoutAmount = this.LoanAmount * ((monthInterestRate * Math.Pow(a, this.PaymentTerm)) /
-				(Math.Pow(a, this.PaymentTerm) - 1));
-			this.LoanBalance = this.LoanAmount;
+			decimal monthInterestRate = (decimal)((decimal)interestRate / 12)/100;
+			double a = (double)(1 + monthInterestRate);
+			this.PayoutAmount = this.LoanAmount * ((monthInterestRate * (decimal)Math.Pow(a, this.PaymentTerm)) /
+                (decimal)(Math.Pow(a, this.PaymentTerm) - 1));
+			this.LoanBalance = this.PayoutAmount * this.PaymentTerm;
         }
     }
 }
