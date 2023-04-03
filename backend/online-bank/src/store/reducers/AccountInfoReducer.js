@@ -1,12 +1,21 @@
 import { CoreApi } from "../../api/CoreApi";
+import { HttpTransportType, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 const SET_CONNECTION = 'SET_CONNECTION';
 const SET_ACCOUNT_INFO = 'SET_ACCOUNT_INFO';
 const SET_OPERATIONS = 'SET_OPERATIONS';
 const SET_USER_ID = 'SET_USER_ID';
 
+/*const operationsHubUrl = 'https://localhost:7139/api/operations';
+
+const connection = new HubConnectionBuilder()
+    .withUrl(operationsHubUrl)
+    .configureLogging(LogLevel.Information)
+    .build();
+*/
+
 let initialState = {
-    connection : '',
+    connection: '',
     userId : '',
     account : {},
     operations: []
@@ -90,6 +99,42 @@ export const getOperationsThunkCreator = (userId, accountId) => {
             .then(data => {
                 dispatch(setOperationsInfoActionCreator(data.operations));
             })
+    }
+}
+
+
+// Всякая ерунда с сокетом
+const startSocket = async (connection) => {
+    await connection.start();
+}
+const join = async (connection, accNum) => {
+    await connection.invoke("JoinToAccountHistory", accNum); 
+}
+//https://localhost:7139/api/operations
+export const joinToAccountHistory = (accountNumber) => {
+    return (dispatch) => {
+        try {
+            const connection = new HubConnectionBuilder()
+                .withUrl("https://localhost:7139/api/operations", {
+                    skipNegotiation: true,
+                    transport: HttpTransportType.WebSockets
+                })
+                .configureLogging(LogLevel.Information)
+                .build();
+
+            connection.on("ReceiveMessage", (message) => {
+                console.log(message);
+            });
+
+            dispatch(setConnectionActionCreator(connection))
+
+            startSocket(connection)
+                .then(() => {
+                    join(connection, accountNumber)
+                })
+        } catch (e) {
+            console.log(e);
+        }
     }
 }
 
