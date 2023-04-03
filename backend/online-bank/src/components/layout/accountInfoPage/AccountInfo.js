@@ -10,11 +10,7 @@ function AccountInfo(props) {
             <Card>
                 <Card.Body>
                     <MainAccountInfo account={props.accountInfo.account} />
-                    <AccountOperationsList operations={props.accountInfo.operations} />
-                    <OperationsPagination pageInfo={props.accountInfo.pageInfo}
-                        userId={props.accountInfo.userId}
-                        accountNumber={props.accountInfo.account.accountNumber}
-                        onPageChanged={props.onPageChanged} />
+                    {/*<AccountOperationsList operations={props.accountInfo.operations} />*/}
                 </Card.Body>
             </Card>
         </>

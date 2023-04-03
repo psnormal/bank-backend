@@ -17,7 +17,7 @@ function App() {
           <Route path='/clients' element={<ClientPage/>}></Route>
           <Route path='/employees' element={<EmployeesPage/>}></Route>
           <Route path='/credits' element={<CreditsPage />}></Route>
-          <Route path='/account/:accountId/:currentPage/:userId' element={<AccountInfoPage />}></Route>
+          <Route path='/account/:accountId/:userId' element={<AccountInfoPage />}></Route>
           <Route path='/credits/:userId' element={<CreditsInfoPage />}></Route>
         </Route>
       </Routes>
