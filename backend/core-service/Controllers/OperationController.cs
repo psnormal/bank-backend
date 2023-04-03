@@ -27,27 +27,41 @@ namespace core_service.Controllers
                 return BadRequest();
             }
 
-            try
+            //проверка авторизации
+            var checker = new CheckAccess(true, false);
+            var url = $"https://localhost:7290/Access/CheckAccess";
+            using var client = new HttpClient();
+            JsonContent content = JsonContent.Create(checker);
+            var response = await client.PostAsync(url, content);
+
+            if (response.IsSuccessStatusCode)
             {
-                await _operationService.CreateOperation(model);
-                await GetOperations(model.UserID, model.AccountNumber);
-                return Ok();
+                try
+                {
+                    await _operationService.CreateOperation(model);
+                    await GetOperations(model.UserID, model.AccountNumber);
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    if (ex.Message == "This account does not exist")
+                    {
+                        return StatusCode(400, ex.Message);
+                    }
+                    if (ex.Message == "This account is closed")
+                    {
+                        return StatusCode(400, ex.Message);
+                    }
+                    if (ex.Message == "Not enough money")
+                    {
+                        return StatusCode(400, ex.Message);
+                    }
+                    return StatusCode(500, "Something went wrong");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                if (ex.Message == "This account does not exist")
-                {
-                    return StatusCode(400, ex.Message);
-                }
-                if (ex.Message == "This account is closed")
-                {
-                    return StatusCode(400, ex.Message);
-                }
-                if (ex.Message == "Not enough money")
-                {
-                    return StatusCode(400, ex.Message);
-                }
-                return StatusCode(500, "Something went wrong");
+                return Unauthorized();
             }
         }
 

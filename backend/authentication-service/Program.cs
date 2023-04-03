@@ -16,6 +16,7 @@ builder.Services.AddScoped<IAccessService, AccessService>();
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
 
+builder.Services.AddCors();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(
     CookieAuthenticationDefaults.AuthenticationScheme)
@@ -42,6 +43,7 @@ context?.Database.Migrate();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001", "https://localhost:7139"));
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
