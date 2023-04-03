@@ -13,6 +13,8 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "clientweb", "clientweb\clie
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "online-bank", "online-bank\online-bank.esproj", "{4235C402-6B81-4600-8557-47BCEFA69A3A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "authentication-service", "authentication-service\authentication-service.csproj", "{7577DDF2-ECD7-49C4-A7F0-7AEA36F0A110}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{4235C402-6B81-4600-8557-47BCEFA69A3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4235C402-6B81-4600-8557-47BCEFA69A3A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4235C402-6B81-4600-8557-47BCEFA69A3A}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{7577DDF2-ECD7-49C4-A7F0-7AEA36F0A110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7577DDF2-ECD7-49C4-A7F0-7AEA36F0A110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7577DDF2-ECD7-49C4-A7F0-7AEA36F0A110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7577DDF2-ECD7-49C4-A7F0-7AEA36F0A110}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
