@@ -1,17 +1,25 @@
 import { CoreApi } from "../../api/CoreApi";
 
+const SET_CONNECTION = 'SET_CONNECTION';
 const SET_ACCOUNT_INFO = 'SET_ACCOUNT_INFO';
 const SET_OPERATIONS = 'SET_OPERATIONS';
 const SET_USER_ID = 'SET_USER_ID';
 
 let initialState = {
+    connection : '',
     userId : '',
     account : {},
-    operations : []
+    operations: []
 }
 
 const AccountInfoReducer = (state = initialState, action) => {
     switch (action.type) {
+        case SET_CONNECTION: {
+            return {
+                ...state,
+                connection: action.connection
+            }
+        }
         case SET_ACCOUNT_INFO : {
             return {
                 ...state,
@@ -36,6 +44,13 @@ const AccountInfoReducer = (state = initialState, action) => {
 }
 
 // ACTIONS
+// Îáíîâèòü èíôîğìàöèş î ñîåäèíåíèè
+export const setConnectionActionCreator = (connection) => {
+    return {
+        type: SET_CONNECTION,
+        connection: connection
+    }
+};
 // Îáíîâèòü èíôîğìàöèş îá àêêàóíòå
 export const setAccountInfoActionCreator = (account) => {
     return {
