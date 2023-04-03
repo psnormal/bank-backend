@@ -59,6 +59,7 @@ namespace credit_service.Services
             rating = rating * repaidCredits.Count();
             rating = rating * ((double)allUsersNotOverduePayments.Count() / (double)allPayments.Count());
 
+            rating = (rating/maxRating)*100;
             return rating;
         }
 
