@@ -16,28 +16,24 @@ const HistoryOperationAccounts: React.FC = () => {
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [history, setHistory] = useState<IHistory>();
 
-    const [connection, setConnection] = useState<HubConnection>();
-    const [historyOperations, setHistoryOperations] = useState<any>([]);
-
-    const operations = async (dateTime: any, transactionAmount: any) => {
+    const joinToAccountHistory = async (numberAccount: number) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl('https://localhost')
+                .withUrl('https://localhost:7139/api/operations')
                 .configureLogging(LogLevel.Information)
                 .build();
 
-            connection.on('GetHistory', (dateTime, transactionAmount) => {
-                setHistoryOperations((historyOperations: any) => [...historyOperations, { dateTime, transactionAmount }]);
+            connection.on('GetOperations', () => {
+                console.log('GetOperations');
+                setHistory(undefined);
             });
 
             await connection.start();
-            await connection.invoke('SendHistory', numberAccount);
-            setConnection(connection);
-        } catch (error) {
-            console.log(error);
+        }
+        catch (e) {
+            console.log(e);
         }
     }
-    console.log(operations);
 
     const onChange = useCallback((value: number) => {
         setNumberAccount(value);
@@ -62,8 +58,9 @@ const HistoryOperationAccounts: React.FC = () => {
         setTitle(titleData.second + numberAccount);
 
         if (numberAccount) {
-            const result = await API.getHistory(userInfo.userId, numberAccount);
-            setHistory(result);
+            //const result = await API.getHistory(userInfo.userId, numberAccount);
+            //setHistory(result);
+            joinToAccountHistory(numberAccount);
         }
         else {
             setTitle(titleData.third);

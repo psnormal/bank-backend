@@ -6,14 +6,48 @@ const Operation: React.FC = () => {
     const [numberAccount, setNumberAccount] = useState<string>();
     const [transactionAmount, setTransactionAmount] = useState<string>();
 
-
+    var amqp = require('amqplib/callback_api');
+    
     const plusMoney = async () => {
-        const date = (new Date()).toISOString();
-        if (numberAccount && transactionAmount) {
-            await API.createOperation(userInfo.userId, parseInt(numberAccount), date, parseInt(transactionAmount));
-            setNumberAccount(undefined);
-            setTransactionAmount(undefined);
-        }
+        // const date = (new Date()).toISOString();
+        // if (numberAccount && transactionAmount) {
+        //     await API.createOperation(userInfo.userId, parseInt(numberAccount), date, parseInt(transactionAmount));
+        //     setNumberAccount(undefined);
+        //     setTransactionAmount(undefined);
+        // }
+
+        amqp.connect('amqp://localhost', function(error0: any, connection: any) {
+            if (error0) {
+                throw error0;
+            }
+            connection.createChannel(function(error1: any, channel: any) {
+                if (error1) {
+                    throw error1;
+                }
+                var queue = 'accounts-operations';
+                var msg = {
+                    userID: userInfo.userId,
+                    accountNumber: numberAccount,
+                    dateTime: (new Date()).toISOString(),
+                    transactionAmount: transactionAmount,
+                } || "Hello World!";
+        
+                channel.assertQueue(queue, {
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false,
+                    arguments: null,
+                });
+                channel.sendToQueue(queue, Buffer.isBuffer(msg), {
+                    persistent: true
+                });
+                console.log(msg);
+            });
+            setTimeout(function() {
+                connection.close();
+                process.exit(0);
+            }, 500);
+        });
     };
 
     const minusMoney = async () => {
