@@ -24,8 +24,8 @@ namespace user_service.Services
 
         public async Task<User> AddNewClient(ClientRegistrationModel model)
         {
-            string newPass = _hashService.HashPassword(model.Password);
-            model.Password = newPass;
+            /*string newPass = _hashService.HashPassword(model.Password);
+            model.Password = newPass;*/
             User newUser = new User(model);
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -39,8 +39,8 @@ namespace user_service.Services
 
         public async Task<User> AddNewEmployee(EmployeeRegistrationModel model)
         {
-            string newPass = _hashService.HashPassword(model.Password);
-            model.Password = newPass;
+            /*string newPass = _hashService.HashPassword(model.Password);
+            model.Password = newPass;*/
             User newUser = new User(model);
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();

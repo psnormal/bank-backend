@@ -27,15 +27,15 @@ namespace core_service.Controllers
                 return BadRequest();
             }
 
-            //проверка авторизации
+            /*//проверка авторизации
             var checker = new CheckAccess(true, false);
-            var url = $"https://localhost:7290/Access/CheckAccess";
+            var url = $"https://localhost:7290/api/auth/check";
             using var client = new HttpClient();
             JsonContent content = JsonContent.Create(checker);
             var response = await client.PostAsync(url, content);
 
             if (response.IsSuccessStatusCode)
-            {
+            {*/
                 try
                 {
                     await _operationService.CreateOperation(model);
@@ -58,11 +58,11 @@ namespace core_service.Controllers
                     }
                     return StatusCode(500, "Something went wrong");
                 }
-            }
+            /*}
             else
             {
                 return Unauthorized();
-            }
+            }*/
         }
 
         [HttpGet]

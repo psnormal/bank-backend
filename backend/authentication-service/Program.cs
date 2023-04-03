@@ -11,6 +11,7 @@ builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); // Включение опци
 
 //Services
 builder.Services.AddScoped<IAccessService, AccessService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 //DB connection:
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");

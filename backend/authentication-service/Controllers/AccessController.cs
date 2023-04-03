@@ -79,7 +79,7 @@ namespace authentication_service.Controllers
             }
         }
 
-        [HttpPost]
+        /*[HttpPost]
         [Route("[controller]/[action]")]
         public IActionResult CheckAccess(AccessForRoles model)
         {
@@ -128,6 +128,6 @@ namespace authentication_service.Controllers
             {
                 return Unauthorized();
             }
-        }
+        }*/
     }
 }

@@ -30,10 +30,10 @@ namespace user_service.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] ClientRegistrationModel model)
         {
-            User user = null;
+            //User user = null;
             try
             {
-                user = await _userService.AddNewClient(model);
+                await _userService.AddNewClient(model);
             }
             catch (ArgumentException)
             {
@@ -50,10 +50,10 @@ namespace user_service.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] EmployeeRegistrationModel model)
         {
-            User user = null;
+            //User user = null;
             try
             {
-                user = await _userService.AddNewEmployee(model);
+                await _userService.AddNewEmployee(model);
             }
             catch (ArgumentException)
             {
