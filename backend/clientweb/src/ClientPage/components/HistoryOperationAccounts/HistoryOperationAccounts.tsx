@@ -19,7 +19,7 @@ const HistoryOperationAccounts: React.FC = () => {
     const joinToAccountHistory = async (numberAccount: number) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl('https://localhost:7139/api/operations')
+                .withUrl('https://localhost:7139/operations')
                 .configureLogging(LogLevel.Information)
                 .build();
 

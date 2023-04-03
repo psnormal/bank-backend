@@ -6,17 +6,17 @@ const Operation: React.FC = () => {
     const [numberAccount, setNumberAccount] = useState<string>();
     const [transactionAmount, setTransactionAmount] = useState<string>();
 
-    var amqp = require('amqplib/callback_api');
+    //var amqp = require('amqplib/callback_api');
     
     const plusMoney = async () => {
-        // const date = (new Date()).toISOString();
-        // if (numberAccount && transactionAmount) {
-        //     await API.createOperation(userInfo.userId, parseInt(numberAccount), date, parseInt(transactionAmount));
-        //     setNumberAccount(undefined);
-        //     setTransactionAmount(undefined);
-        // }
+         const date = (new Date()).toISOString();
+         if (numberAccount && transactionAmount) {
+             await API.createOperation(userInfo.userId, parseInt(numberAccount), date, parseInt(transactionAmount));
+             setNumberAccount(undefined);
+             setTransactionAmount(undefined);
+         }
 
-        amqp.connect('amqp://localhost', function(error0: any, connection: any) {
+        /*amqp.connect('amqp://localhost', function(error0: any, connection: any) {
             if (error0) {
                 throw error0;
             }
@@ -47,7 +47,7 @@ const Operation: React.FC = () => {
                 connection.close();
                 process.exit(0);
             }, 500);
-        });
+        });*/
     };
 
     const minusMoney = async () => {

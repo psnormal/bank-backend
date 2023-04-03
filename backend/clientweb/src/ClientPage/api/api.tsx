@@ -32,7 +32,7 @@ class API{
 
     //GET информация о кредитном рейтинге клиента
     getCreditRating(userId: string) {
-        const response = fetch(this.credit + `api/CreditRating/${userId}`).then(response => 
+        const response = fetch(this.credit + `api/CreditRating?UserID=${userId}`).then(response => 
             response.json()
         );
         return response;
