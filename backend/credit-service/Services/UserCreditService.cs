@@ -101,7 +101,7 @@ namespace credit_service.Services
             var url2 = "https://localhost:7139/api/operation/create";
             using var client = new HttpClient();
             //RabbitMQ connection 
-            /*var factory = new ConnectionFactory { HostName = "localhost" };
+            var factory = new ConnectionFactory { HostName = "localhost" };
             using var connection1 = factory.CreateConnection();
             using var channel = connection1.CreateModel();
 
@@ -109,7 +109,7 @@ namespace credit_service.Services
                                 durable: true,
                                 exclusive: false,
                                 autoDelete: false,
-                                arguments: null);*/
+                                arguments: null);
 
 
             if (credit.NumOfOverduePayouts > 0)
@@ -127,20 +127,26 @@ namespace credit_service.Services
                         var resultContent = await response0.Content.ReadFromJsonAsync<AccountInfo>();
                         if (resultContent.Balance >= overdueCreditPayment.PayoutAmount)
                         {
-                            var operation = new OperationInfo(credit.UserId, credit.AccountNum, overdueCreditPayment.PayoutAmount);
-                            JsonContent content = JsonContent.Create(operation);
-                            var response2 = await client.PostAsync(url2, content);
-                            if (response2.IsSuccessStatusCode)
-                            {
+                            var operation = new OperationInfo(credit.UserId, credit.AccountNum, -1*(overdueCreditPayment.PayoutAmount));
+                            var json = JsonConvert.SerializeObject(operation);
+                            var body = Encoding.UTF8.GetBytes(json);
+                            channel.BasicPublish(exchange: "",
+                                                 routingKey: "accounts-operations",
+                                                 basicProperties: null,
+                                                 body: body);
+                            //JsonContent content = JsonContent.Create(operation);
+                            //var response2 = await client.PostAsync(url2, content);
+                            /*if (response2.IsSuccessStatusCode)
+                            {*/
                                 credit.LoanBalance = credit.LoanBalance - overdueCreditPayment.PayoutAmount;
                                 overdueCreditPayment.IsOverdue = true;
                                 overdueCreditPayment.IsSuccessful = true;
                                 credit.NumOfOverduePayouts--;
-                            }
+                            /*}
                             else
                             {
                                 overdueCreditPayment.IsSuccessful = false;
-                            }
+                            }*/
                             _context.CreditPayments.Add(overdueCreditPayment);
                             await _context.SaveChangesAsync();
                         }
@@ -169,24 +175,30 @@ namespace credit_service.Services
                 var resultContent = await response.Content.ReadFromJsonAsync<AccountInfo>();
                 if (resultContent.Balance >= creditPayment.PayoutAmount)
                 {
-                    var operation = new OperationInfo(credit.UserId, credit.AccountNum, creditPayment.PayoutAmount);
-                    JsonContent content = JsonContent.Create(operation);
-                    var response2 = await client.PostAsync(url2, content);
-                    
+                    var operation = new OperationInfo(credit.UserId, credit.AccountNum, -1*(creditPayment.PayoutAmount));
+                    var json = JsonConvert.SerializeObject(operation);
+                    var body = Encoding.UTF8.GetBytes(json);
+                    channel.BasicPublish(exchange: "",
+                                         routingKey: "accounts-operations",
+                                         basicProperties: null,
+                                         body: body);
+                    //JsonContent content = JsonContent.Create(operation);
+                    //var response2 = await client.PostAsync(url2, content);
 
-                    if (response2.IsSuccessStatusCode)
-                    {
+
+                    /*if (response2.IsSuccessStatusCode)
+                    {*/
                         credit.LoanBalance = credit.LoanBalance - creditPayment.PayoutAmount;
                         creditPayment.IsOverdue = false;
                         creditPayment.IsSuccessful = true;
 
 
-                    }
+                    /*}
                     else
                     {
                         creditPayment.IsSuccessful = false;
                         credit.NumOfOverduePayouts++;
-                    }
+                    }*/
 
                 }
                 else
