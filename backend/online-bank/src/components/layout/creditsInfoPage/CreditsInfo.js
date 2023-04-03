@@ -8,7 +8,7 @@ function CreditsInfo(props) {
         <>
             <Card>
                 <Card.Body>
-                    <MainUserInfo name={props.infoOnPage.name} lastname={props.infoOnPage.lastname} />
+                    <MainUserInfo name={props.infoOnPage.name} lastname={props.infoOnPage.lastname} creditRating={props.infoOnPage.creditRating} />
                     <CreditsList credits={ props.infoOnPage.credits}/>
                 </Card.Body>
             </Card>

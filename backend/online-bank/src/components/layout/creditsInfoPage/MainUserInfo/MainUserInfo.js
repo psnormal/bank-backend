@@ -7,7 +7,7 @@ function MainUserInfo(props) {
             <Container className="mb-4">
                 <h5>Информация о клиенте:</h5>
                 <p>{props.name} {props.lastname}</p>
-                <p>Кредитный рейтинг:</p>
+                <p>Кредитный рейтинг: {props.creditRating}</p>
             </Container>
         </>
     )

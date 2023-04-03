@@ -9,7 +9,7 @@ class CreditsInfoContainer extends React.Component {
         let userId = this.props.router.params.userId;
 
         this.props.getClientInfo(userId);
-        /*this.props.getClientCreditRating(userId);*/
+        this.props.getClientCreditRating(userId);
         this.props.getClientCredits(userId);
     }
 

@@ -24,6 +24,7 @@ const CreditsInfoReducer = (state = initialState, action) => {
             }
         }
         case SET_CLIENT_CREDIT_RATING: {
+            console.log(action.creditRating)
             return {
                 ...state,
                 creditRating: action.creditRating
