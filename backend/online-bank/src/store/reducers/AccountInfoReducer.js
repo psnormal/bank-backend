@@ -1,18 +1,10 @@
 import { CoreApi } from "../../api/CoreApi";
-import { HttpTransportType, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HubConnectionBuilder} from "@microsoft/signalr";
 
 const SET_CONNECTION = 'SET_CONNECTION';
 const SET_ACCOUNT_INFO = 'SET_ACCOUNT_INFO';
 const SET_OPERATIONS = 'SET_OPERATIONS';
 const SET_USER_ID = 'SET_USER_ID';
-
-/*const operationsHubUrl = 'https://localhost:7139/api/operations';
-
-const connection = new HubConnectionBuilder()
-    .withUrl(operationsHubUrl)
-    .configureLogging(LogLevel.Information)
-    .build();
-*/
 
 let initialState = {
     connection: '',
@@ -92,44 +84,40 @@ export const getAccountInfoThunkCreator = (userId, accountId) => {
             })
     }
 }
-// Получить информацию об операциях счета и пагинации с сервера
-export const getOperationsThunkCreator = (userId, accountId) => {
-    return (dispatch) => {
-        CoreApi.getAccountOperations(userId, accountId)
-            .then(data => {
-                dispatch(setOperationsInfoActionCreator(data.operations));
-            })
-    }
-}
 
-
-// Всякая ерунда с сокетом
-const startSocket = async (connection) => {
+// Работа с сокетом
+const startSocketAndJoinToAccountHistory = async (connection, accNum) => {
     await connection.start();
+    await connection.invoke("JoinToAccountHistory", accNum);
 }
-const join = async (connection, accNum) => {
-    await connection.invoke("JoinToAccountHistory", accNum); 
-}
-export const joinToAccountHistory = (accountNumber) => {
+export const joinToAccountHistory = (stateConnection, userId, accountNumber) => {
     return (dispatch) => {
-        try {
-            const connection = new HubConnectionBuilder()
-                .withUrl("https://localhost:7139/operations")
-                .withAutomaticReconnect()
-                .build();
+        if (stateConnection === '') {
+            try {
+                const connection = new HubConnectionBuilder()
+                    .withUrl("https://localhost:7139/operations")
+                    .withAutomaticReconnect()
+                    .build();
 
-            connection.on("ReceiveMessage", (message) => {
-                console.log(message);
-            });
+                connection.on("ReceiveMessage", (message) => {
+                    console.log(message);
+                });
 
-            dispatch(setConnectionActionCreator(connection))
-
-            startSocket(connection)
-                .then(() => {
-                    join(connection, accountNumber)
+                connection.on("GetOperations", (data) => {
+                    dispatch(setOperationsInfoActionCreator(data.operations))
                 })
-        } catch (e) {
-            console.log(e);
+
+                connection.onclose(e => {
+                    dispatch(setConnectionActionCreator(''))
+                });
+
+                startSocketAndJoinToAccountHistory(connection, accountNumber)
+                    .then(() => {
+                        CoreApi.getAccountOperations(userId, accountNumber)
+                    });
+
+                dispatch(setConnectionActionCreator(connection))
+            } catch (e) { console.log(e) }
         }
     }
 }

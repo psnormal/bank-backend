@@ -10,7 +10,7 @@ function AccountInfo(props) {
             <Card>
                 <Card.Body>
                     <MainAccountInfo account={props.accountInfo.account} />
-                    {/*<AccountOperationsList operations={props.accountInfo.operations} />*/}
+                    <AccountOperationsList operations={props.accountInfo.operations} />
                 </Card.Body>
             </Card>
         </>
