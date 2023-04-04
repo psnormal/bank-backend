@@ -68,6 +68,7 @@ builder.Services.AddSwaggerGen();
 //Services
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IOperationService, OperationService>();
+builder.Services.AddSingleton<IDictionary<string, int>>(opts => new Dictionary<string,int>());
 
 //DB connection:
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");

@@ -1,5 +1,5 @@
 import React from "react";
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import { HttpTransportType, HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { connect } from 'react-redux';
 import withRouter from "../../../hoc/withRouter";
 import { getAccountInfoThunkCreator, getOperationsThunkCreator, joinToAccountHistory, setAccountUserIdActionCreator} from "../../../store/reducers/AccountInfoReducer";
@@ -13,7 +13,7 @@ class AccountInfoContainer extends React.Component {
         this.props.getAccountInfo(userId, accountId);
         /*this.props.getOperations(userId, accountId);*/
         this.props.setAccountUserId(userId);
-        this.props.joinToAccountHistory(this.props.connection, accountId);
+        this.props.joinToAccountHistory(accountId);
     }
 
     render() {

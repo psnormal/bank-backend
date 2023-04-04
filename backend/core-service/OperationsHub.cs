@@ -11,12 +11,12 @@ namespace core_service
         {
             _connections = connections;
         }
-
-        public async Task JoinToAccountHistory(int accountNumber)
+        public async Task JoinToAccountHistory(string accountNumber)
         {
-            string Number = accountNumber.ToString();
-            await Groups.AddToGroupAsync(Context.ConnectionId, Number);
-            _connections[Context.ConnectionId] = accountNumber;
+            int Number = Convert.ToInt32(accountNumber); 
+            await Groups.AddToGroupAsync(Context.ConnectionId, accountNumber);
+            _connections[Context.ConnectionId] = Number;
+            await Clients.Group(accountNumber).SendAsync("ReceiveMessage", $"You has joined {accountNumber}");
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)

@@ -110,16 +110,12 @@ const startSocket = async (connection) => {
 const join = async (connection, accNum) => {
     await connection.invoke("JoinToAccountHistory", accNum); 
 }
-//https://localhost:7139/api/operations
 export const joinToAccountHistory = (accountNumber) => {
     return (dispatch) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl("https://localhost:7139/operations", {
-                    skipNegotiation: true,
-                    transport: HttpTransportType.WebSockets
-                })
-                .configureLogging(LogLevel.Information)
+                .withUrl("https://localhost:7139/operations")
+                .withAutomaticReconnect()
                 .build();
 
             connection.on("ReceiveMessage", (message) => {
