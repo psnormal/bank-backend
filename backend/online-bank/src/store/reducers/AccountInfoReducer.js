@@ -115,7 +115,7 @@ export const joinToAccountHistory = (accountNumber) => {
     return (dispatch) => {
         try {
             const connection = new HubConnectionBuilder()
-                .withUrl("https://localhost:7139/api/operations", {
+                .withUrl("https://localhost:7139/operations", {
                     skipNegotiation: true,
                     transport: HttpTransportType.WebSockets
                 })
