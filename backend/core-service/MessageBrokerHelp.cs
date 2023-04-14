@@ -13,5 +13,13 @@ namespace core_service
             await client.PostAsync(url, content);
             //string responseText = await response.Content.ReadAsStringAsync();
         }
+
+        public async Task CreateTransaction(CreateTransactionDto body)
+        {
+            var url = $"https://localhost:7139/api/transaction/create";
+            using var client = new HttpClient();
+            JsonContent content = JsonContent.Create(body);
+            await client.PostAsync(url, content);
+        }
     }
 }

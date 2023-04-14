@@ -12,6 +12,8 @@ namespace core_service.Models
         [Required]
         [ForeignKey("Account")]
         public int AccountNumber { get; set; }
+        public int SenderAccountNumber { get; set; }
+        public int RecipientAccountNumber { get; set; }
         [Required]
         public DateTime DateTime { get; set; }
         [Required]

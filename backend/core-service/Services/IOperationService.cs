@@ -6,5 +6,6 @@ namespace core_service.Services
     {
         Task CreateOperation(CreateOperationDTO model);
         InfoOperationsDTO GetOperations(Guid UserID, int accountNumber);
+        Task<Guid> CreateTransaction(CreateTransactionDto model);
     }
 }
