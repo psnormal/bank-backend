@@ -65,6 +65,48 @@ namespace core_service.Controllers
             }*/
         }
 
+        [HttpPost]
+        [Route("transaction/create")]
+        public async Task<IActionResult> CreateTransaction(CreateTransactionDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var RecID = await _operationService.CreateTransaction(model);
+                await GetOperations(model.UserID, model.SenderAccountNumber);
+                await GetOperations(RecID, model.RecipientAccountNumber);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "This account does not exist")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                if (ex.Message == "This account is closed")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                if (ex.Message == "Not enough money")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                if (ex.Message == "Incorrect operation")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                if (ex.Message == "Recipient account does not exist")
+                {
+                    return StatusCode(400, ex.Message);
+                }
+                return StatusCode(500, "Something went wrong");
+            }
+        }
+
         [HttpGet]
         [Route("account/{id}/operations")]
         public async Task<IActionResult> GetOperations(Guid UserID, int id)

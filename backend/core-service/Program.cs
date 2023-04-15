@@ -13,8 +13,15 @@ using core_service.Models;
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection1 = factory.CreateConnection();
 using var channel = connection1.CreateModel();
+using var channel2 = connection1.CreateModel();
 
 channel.QueueDeclare(queue: "accounts-operations",
+                     durable: true,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+
+channel2.QueueDeclare(queue: "accounts-transactions",
                      durable: true,
                      exclusive: false,
                      autoDelete: false,
@@ -53,6 +60,19 @@ consumer.Received += async (sender, e) =>
 channel.BasicConsume(queue: "accounts-operations",
                      autoAck: true,
                      consumer: consumer);
+
+var consumer2 = new EventingBasicConsumer(channel2);
+consumer2.Received += async (sender, e) =>
+{
+    var body = e.Body;
+    var message = Encoding.UTF8.GetString(body.ToArray());
+    var transaction = JsonConvert.DeserializeObject<CreateTransactionDto>(message);
+    await mbh.CreateTransaction(transaction);
+};
+
+channel2.BasicConsume(queue: "accounts-transactions",
+                     autoAck: true,
+                     consumer: consumer2);
 
 var builder = WebApplication.CreateBuilder(args);
 
