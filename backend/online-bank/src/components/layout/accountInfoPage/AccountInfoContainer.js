@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
 import withRouter from "../../../hoc/withRouter";
-import {getAccountInfoThunkCreator, joinToAccountHistory, setAccountUserIdActionCreator} from "../../../store/reducers/AccountInfoReducer";
+import {getAccountInfoThunkCreator, getClientAccountsThunkCreator, joinToAccountHistory, setAccountUserIdActionCreator} from "../../../store/reducers/AccountInfoReducer";
 import AccountInfo from "./AccountInfo";
 
 class AccountInfoContainer extends React.Component {
@@ -11,6 +11,7 @@ class AccountInfoContainer extends React.Component {
 
         this.props.getAccountInfo(userId, accountId);
         this.props.setAccountUserId(userId);
+        this.props.getClientAccounts(userId);
         this.props.joinToAccountHistory(this.props.accountInfo.connection, userId, accountId);
     }
 
@@ -45,6 +46,7 @@ let AccountInfoContainerWithUrl = withRouter(AccountInfoContainer);
 export default connect(mapStateToProps, {
     getAccountInfo: getAccountInfoThunkCreator,
     setAccountUserId: setAccountUserIdActionCreator,
+    getClientAccounts: getClientAccountsThunkCreator,
     joinToAccountHistory
 })
     (AccountInfoContainerWithUrl)

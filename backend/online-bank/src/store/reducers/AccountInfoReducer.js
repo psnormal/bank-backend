@@ -5,12 +5,14 @@ const SET_CONNECTION = 'SET_CONNECTION';
 const SET_ACCOUNT_INFO = 'SET_ACCOUNT_INFO';
 const SET_OPERATIONS = 'SET_OPERATIONS';
 const SET_USER_ID = 'SET_USER_ID';
+const SET_CLIENT_ACCOUNTS = 'SET_CLIENT_ACCOUNTS'
 
 let initialState = {
     connection: '',
     userId : '',
     account : {},
-    operations: []
+    operations: [],
+    clientAccounts: []
 }
 
 const AccountInfoReducer = (state = initialState, action) => {
@@ -27,10 +29,11 @@ const AccountInfoReducer = (state = initialState, action) => {
                 account: action.account
             }
         }
-        case SET_OPERATIONS : {
+        case SET_OPERATIONS: {
+            let operationsWithTypes = defineOperationTypes(action.operations, state.clientAccounts);
             return {
                 ...state,
-                operations : action.operations
+                operations: operationsWithTypes
             }
         }
         case SET_USER_ID: {
@@ -39,43 +42,73 @@ const AccountInfoReducer = (state = initialState, action) => {
                 userId: action.userId
             }
         }
+        case SET_CLIENT_ACCOUNTS: {
+            return {
+                ...state,
+                clientAccounts: action.clientAccounts
+            }
+        }
         default:
             return state;
     }
 }
 
+const defineOperationTypes = (operations, clientAccounts) => {
+    operations.map(operation => {
+        if (operation.senderAccountNumber === 0 && operation.recipientAccountNumber === 0) {
+            operation.transactionAmount >= 0 ? operation.type = "Р’РЅРµСЃРµРЅРёРµ СЃСЂРµРґСЃС‚РІ" : operation.type = "РЎРїРёСЃР°РЅРёРµ СЃСЂРµРґСЃС‚РІ";
+        }
+        else if (operation.senderAccountNumber !== 0 && operation.recipientAccountNumber === 0) {
+            clientAccounts.includes(operation.senderAccountNumber) ? operation.type = "РњРµР¶РґСѓ СЃРІРѕРёРјРё СЃС‡РµС‚Р°РјРё" : operation.type = "Р’С…РѕРґСЏС‰РёР№ РїРµСЂРµРІРѕРґ";
+        }
+        else if (operation.senderAccountNumber === 0 && operation.recipientAccountNumber !== 0) {
+            clientAccounts.includes(operation.recipientAccountNumber) ? operation.type = "РњРµР¶РґСѓ СЃРІРѕРёРјРё СЃС‡РµС‚Р°РјРё" : operation.type = "РџРµСЂРµРІРѕРґ РєР»РёРµРЅС‚Сѓ Р±Р°РЅРєР°";
+        }
+        else
+            operation.type = "Р‘Р°РЅРєРѕРІСЃРєР°СЏ РѕРїРµСЂР°С†РёСЏ";
+    })
+    return operations
+}
+
 // ACTIONS
-// Обновить информацию о соединении
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const setConnectionActionCreator = (connection) => {
     return {
         type: SET_CONNECTION,
         connection: connection
     }
 };
-// Обновить информацию об аккаунте
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const setAccountInfoActionCreator = (account) => {
     return {
         type: SET_ACCOUNT_INFO,
         account: account
     }
 };
-// Обновить информацию об операциях счета и пагинации
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const setOperationsInfoActionCreator = (operations) => {
     return {
         type: SET_OPERATIONS,
         operations: operations
     }
 };
-// Обновить информацию id пользователя
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ id пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const setAccountUserIdActionCreator = (userId) => {
     return {
         type: SET_USER_ID,
         userId: userId
     }
 };
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+export const setClientAccountsActionCreator = (accounts) => {
+    return {
+        type: SET_CLIENT_ACCOUNTS,
+        clientAccounts: accounts
+    }
+};
 
 // THUNKS
-// Получить информацию об аккаунте с сервера
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const getAccountInfoThunkCreator = (userId, accountId) => {
     return (dispatch) => {
         CoreApi.getUserAccountInfo(userId, accountId)
@@ -84,8 +117,19 @@ export const getAccountInfoThunkCreator = (userId, accountId) => {
             })
     }
 }
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+export const getClientAccountsThunkCreator = (userId) => {
+    return (dispatch) => {
+        CoreApi.getAllUserAccounts(userId)
+            .then(data => {
+                let clientAccounts = [...data.accounts];
+                let clientAccountsNumbers = clientAccounts.map(clientAccount => clientAccount.accountNumber);
+                dispatch(setClientAccountsActionCreator(clientAccountsNumbers)); 
+            })
+    }
+}
 
-// Работа с сокетом
+// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 const startSocketAndJoinToAccountHistory = async (connection, accNum) => {
     await connection.start();
     await connection.invoke("JoinToAccountHistory", accNum);
