@@ -3,12 +3,14 @@ using authentication_service.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace authentication_service.Controllers
 {
-    [Route("api/[controller]")]
+    /*[Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : Controller
     {
         private IAuthService _authService;
         public AuthController(IAuthService service)
@@ -28,7 +30,7 @@ namespace authentication_service.Controllers
             ClaimsPrincipal claimUser = HttpContext.User;
             if (!claimUser.Identity.IsAuthenticated)
             {
-                Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbbbbbb");
                 return Unauthorized();
             }
             var isClient = claimUser.HasClaim(ClaimTypes.Role, "Client");
@@ -90,5 +92,5 @@ namespace authentication_service.Controllers
                 return StatusCode(500, "Something went wrong");
             }
         }
-    }
+    }*/
 }

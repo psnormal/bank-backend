@@ -2,6 +2,9 @@ using authentication_service.Storage;
 using authentication_service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Configuration;
+using authentication_service;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +13,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); // Включение опции перекомпиляции представления после изменения и сохранения cshtml файла
 
 //Services
-builder.Services.AddScoped<IAccessService, AccessService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
+//builder.Services.AddScoped<IAccessService, AccessService>();
+//builder.Services.AddScoped<IAuthService, AuthService>();
 
 //DB connection:
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -25,6 +28,28 @@ builder.Services.AddAuthentication(
         option.LoginPath = "/Access/Login";
         option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
     });
+
+builder.Services.AddIdentity<User, Role>(option => {
+    option.SignIn.RequireConfirmedAccount = false;
+    option.Password.RequireDigit = false;
+    option.Password.RequireLowercase = false;
+    option.Password.RequireNonAlphanumeric = false;
+    option.Password.RequireUppercase = false;
+    option.Password.RequiredLength = 0;
+})
+    .AddSignInManager<SignInManager<User>>()
+    .AddUserManager<UserManager<User>>()
+    .AddRoleManager<RoleManager<Role>>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddIdentityServer()
+                .AddAspNetIdentity<User>()
+                .AddInMemoryApiResources(Configuration.ApiResources)
+                .AddInMemoryIdentityResources(Configuration.IdentityResources)
+                .AddInMemoryApiScopes(Configuration.ApiScopes)
+                .AddInMemoryClients(Configuration.Clients)
+                .AddDeveloperSigningCredential();
 
 var app = builder.Build();
 
@@ -44,10 +69,12 @@ context?.Database.Migrate();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001", "https://localhost:7139"));
-app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001", "https://localhost:7139"));
+app.UseRouting();
+app.UseIdentityServer();
 
 app.MapControllerRoute(
     name: "default",

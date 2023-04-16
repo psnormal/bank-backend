@@ -4,23 +4,21 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using authentication_service.Models;
 using authentication_service.Services;
-using authentication_service.Storage;
-using Microsoft.AspNetCore.Authorization;
 
 namespace authentication_service.Controllers
 {
     public class AccessController : Controller
     {
-        private IAccessService _accessService;
+        /*private IAccessService _accessService;
         public AccessController(IAccessService service)
         {
             _accessService = service;
-        }
+        }*/
 
         [HttpGet]
         public IActionResult Login()
         {
-            ClaimsPrincipal claimUser = HttpContext.User;
+            /*ClaimsPrincipal claimUser = HttpContext.User;
 
             if (claimUser.Identity.IsAuthenticated)
             {
@@ -33,12 +31,12 @@ namespace authentication_service.Controllers
                     return Redirect("http://localhost:3000");
                 }
                 else return View("Selection");
-            }
+            }*/
 
             return View();
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -77,7 +75,7 @@ namespace authentication_service.Controllers
                 }
                 return StatusCode(500, "Something went wrong");
             }
-        }
+        }*/
 
         /*[HttpPost]
         [Route("[controller]/[action]")]

@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace authentication_service.Storage
 {
-    public class User
+    public class User : IdentityUser<Guid>
     {
-        public Guid UserId { get; set; }
+        //public Guid UserId { get; set; }
         [Required]
         public string Login { get; set; }
         [Required]

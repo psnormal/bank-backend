@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace authentication_service.Services
 {
-    public class AuthService : IAuthService
+    /*public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _context;
 
@@ -63,5 +63,5 @@ namespace authentication_service.Services
                 await client.PostAsync(url, content);
             }
         }
-    }
+    }*/
 }
