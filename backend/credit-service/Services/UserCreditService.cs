@@ -39,6 +39,16 @@ namespace credit_service.Services
             {
                 throw new Exception("Unable to create credit");
             }
+            var factory = new ConnectionFactory { HostName = "localhost" };
+            using var connection1 = factory.CreateConnection();
+            using var channel = connection1.CreateModel();
+
+            channel.QueueDeclare(queue: "accounts-operations",
+                                durable: true,
+                                exclusive: false,
+                                autoDelete: false,
+                                arguments: null);
+
             var url = $"https://localhost:7139/api/account/create";
             using var client = new HttpClient();
             var account = new CreatingAccount(userId);
@@ -58,6 +68,15 @@ namespace credit_service.Services
                 {
                     throw new Exception("Unable to create credit");
                 }
+
+                var operation = new OperationInfo(credit.UserId, credit.AccountNum, credit.LoanAmount);
+                var json = JsonConvert.SerializeObject(operation);
+                var body = Encoding.UTF8.GetBytes(json);
+                channel.BasicPublish(exchange: "",
+                                     routingKey: "accounts-operations",
+                                     basicProperties: null,
+                                     body: body);
+
                 return credit;
             }
             else
