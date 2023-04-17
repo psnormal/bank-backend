@@ -1,12 +1,23 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Route, Routes } from 'react-router-dom';
+import { OidcProvider } from '@axa-fr/react-oidc';
 import ClientPage from './components/layout/clientsPage/ClientPage';
 import EmployeesPage from './components/layout/employeePage/EmployeesPage';
 import CreditsPage from './components/layout/creditsPage/CreditsPage';
 import Layout from './components/layout/Layout';
 import AccountInfoPage from './components/layout/accountInfoPage/AccountInfoPage';
 import CreditsInfoPage from './components/layout/creditsInfoPage/CreditsInfoPage';
+
+const configuration = {
+    client_id: 'employee-web-app',
+    redirect_uri: window.location.origin + '/authentication/callback',
+    silent_redirect_uri: window.location.origin + '/authentication/silent-callback', 
+    scope: 'openid profile WebAPI',
+    authority: 'https://demo.duendesoftware.com',
+    service_worker_relative_url: '/OidcServiceWorker.js',
+    service_worker_only: true,
+};
 
 function App() {
   return (

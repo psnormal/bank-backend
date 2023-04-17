@@ -86,6 +86,34 @@ namespace authentication_service
                         "WebAPI"
                     },
                     AllowAccessTokensViaBrowser = true
+                },
+                new Client
+                {
+                    ClientId = "employee-web-app",
+                    ClientName = "Employee Web",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = true,
+                    ClientSecrets = {new Secret("string123".Sha256())},
+                    RequirePkce = false,
+                    RedirectUris =
+                    {
+                        "https://oauth.pstmn.io/v1/callback", "http://localhost:3001/signin-oidc"
+                    },
+                    AllowedCorsOrigins =
+                    {
+                        "http://localhost:3001"
+                    },
+                    PostLogoutRedirectUris =
+                    {
+                        "http://localhost:3001/signout-oidc"
+                    },
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "WebAPI"
+                    },
+                    AllowAccessTokensViaBrowser = true
                 }
             };
     }
