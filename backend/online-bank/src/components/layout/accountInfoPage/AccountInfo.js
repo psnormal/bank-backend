@@ -2,7 +2,6 @@ import React from "react";
 import { Card} from 'react-bootstrap';
 import AccountOperationsList from "./AccountOperationsList";
 import MainAccountInfo from "./MainAccountInfo";
-import OperationsPagination from "./OperationsPagination";
 
 function AccountInfo(props) {
     return (
@@ -10,7 +9,7 @@ function AccountInfo(props) {
             <Card>
                 <Card.Body>
                     <MainAccountInfo account={props.accountInfo.account} />
-                    <AccountOperationsList operations={props.accountInfo.operations} />
+                    <AccountOperationsList operations={props.accountInfo.operations} clientAccountsNums={props.accountInfo.clientAccounts } />
                 </Card.Body>
             </Card>
         </>

@@ -12,20 +12,20 @@ const titleData = {
 
 const ClientAccountInfo: React.FC = () => {
     const [title, setTitle] = useState<string>(titleData.first);
-    const [numberAccount, setNumberAccount] = useState<string>();
+    const [numberAccount, setNumberAccount] = useState<number>();
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [account, setAccount] = useState<IAccount>();
 
     useEffect(() => {
         if (account && numberAccount) {
             setTimeout(async () => {
-                const accounts = await API.getAccount(userInfo.userId, parseInt(numberAccount));
+                const accounts = await API.getAccount(userInfo.userId, numberAccount);
                 setAccount(accounts);
             }, 3000);
         }
     });
 
-    const onChange = useCallback((value: string) => {
+    const onChange = useCallback((value: number) => {
         setNumberAccount(value);
     }, []);
 
@@ -34,10 +34,9 @@ const ClientAccountInfo: React.FC = () => {
         setTitle(titleData.second + numberAccount);
 
         if (numberAccount) {
-            const accounts = await API.getAccount(userInfo.userId, parseInt(numberAccount));
+            const accounts = await API.getAccount(userInfo.userId, numberAccount);
             console.log(accounts);
             setAccount(accounts);
-            //setAccount(userAccounts.accounts.filter(item => item.accountNumber.toString() === numberAccount));
         }
         else {
             setTitle(titleData.third);
@@ -54,10 +53,10 @@ const ClientAccountInfo: React.FC = () => {
     const inputBlock = useMemo(() => {
         return (
             <input 
-                type='text'
+                type='number'
                 value={numberAccount} 
                 onChange={(event) => {
-                    onChange(event.target.value);
+                    onChange(event.target.value as unknown as number);
                 }}
                 placeholder='Введите номер'
                 style={{ marginRight: '10px', marginBlock: '10px', padding: '5px' }}

@@ -14,7 +14,7 @@ const Credit: React.FC = () => {
             if (!creditRates) {
                 const credit = await API.getCreditRates();
                 setCreditRates(credit);
-                setCredit(credit.creditRateId);
+                setCredit(credit[0].creditRateId);
             }
         })() 
     }, []);
