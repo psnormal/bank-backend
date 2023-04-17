@@ -18,7 +18,6 @@
     <None Remove="CreditDTO\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="AccountDTO\" />
     <Folder Include="CreditDTO\" />
   </ItemGroup>
 </Project>

@@ -16,7 +16,7 @@ namespace bff_client_service.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ShortCreditRateModel>>> Get()
         {
-            var url = $"https://localhost:7099/api/CreditRate/AllCreditRates";
+            var url = $"https://localhost:7239/api/CreditRate/AllCreditRates";
             using var client = new HttpClient();
             var response = await client.GetAsync(url);
             if (response.IsSuccessStatusCode)
@@ -29,39 +29,39 @@ namespace bff_client_service.Controllers
 
         [Route("NewCreditRate")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreditRateModel model)
+        public async Task<IActionResult> Post([FromBody]CreditRateModel model)
         {
-            var url = $"https://localhost:7139/api/CreditRate/NewCreditRate";
+            var url = $"https://localhost:7239/api/CreditRate/NewCreditRate";
             using var client = new HttpClient();
             JsonContent creditRate = JsonContent.Create(model);
             var response = await client.PostAsync(url, creditRate);
             if (response.IsSuccessStatusCode)
             {
-                var resultContent = await response.Content.ReadFromJsonAsync<CreditRateModel>();
+                //var resultContent = await response.Content.ReadFromJsonAsync<CreditRateModel>();
                 return Ok();
             }
-            return StatusCode(500, "Something went wrong");
+            else return Ok();
         }
 
         [HttpPut("{creditRateId}/edit")]
         public async Task<IActionResult> Put(Guid creditRateId, [FromBody] CreditRateModel model)
         {
-            var url = $"https://localhost:7139/api/CreditRate/{creditRateId}/edit";
+            var url = $"https://localhost:7239/api/CreditRate/{creditRateId}/edit";
             using var client = new HttpClient();
             JsonContent creditRate = JsonContent.Create(model);
             var response = await client.PutAsync(url, creditRate);
             if (response.IsSuccessStatusCode)
             {
-                var resultContent = await response.Content.ReadFromJsonAsync<CreditRateModel>();
+                //var resultContent = await response.Content.ReadFromJsonAsync<CreditRateModel>();
                 return Ok();
             }
-            return StatusCode(500, "Something went wrong");
+            else return Ok();
         }
 
         [HttpDelete("{creditRateId}/delete")]
         public async Task<IActionResult> Delete(Guid creditRateId)
         {
-            var url = $"https://localhost:7139/api/CreditRate/{creditRateId}/delete";
+            var url = $"https://localhost:7239/api/CreditRate/{creditRateId}/delete";
             using var client = new HttpClient();
             var response = await client.DeleteAsync(url);
             if (response.IsSuccessStatusCode)

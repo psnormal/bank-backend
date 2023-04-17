@@ -14,7 +14,7 @@ namespace bff_client_service.Controllers
     {
         [HttpPost]
         [Route("account/create")]
-        public async Task<ActionResult<InfoAccountDTO>> CreateAccount(CreateAccountDTO model)
+        public async Task<ActionResult<InfoAccountDTO>> CreateAccount([FromBody]CreateAccountDTO model)
         {
             var url = $"https://localhost:7139/api/account/create";
             using var client = new HttpClient();
@@ -28,14 +28,14 @@ namespace bff_client_service.Controllers
             return StatusCode(500, "Something went wrong");
         }
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("accounts/all")]
         //[Authorize(Roles = "Employee")]
         public ActionResult<InfoAccountsDTO> GetAllUserAccounts(Guid UserID)
         {
             var url = $"https://localhost:7139/api/accounts/all";
             var content = new StringContent(UserID);
-        }
+        }*/
     }
 }
 
