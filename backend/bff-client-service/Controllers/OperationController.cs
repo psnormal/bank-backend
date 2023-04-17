@@ -15,19 +15,6 @@ namespace bff_client_service.Controllers
     [Route("api/[controller]")]
     public class OperationController : Controller
     {
-        // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/values
         [HttpPost]
@@ -53,16 +40,28 @@ namespace bff_client_service.Controllers
                                  body: body);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        // POST api/values
+        [HttpPost]
+        [Route("transaction/create")]
+        public void Post([FromBody] CreateTransactionDTO model)
         {
-        }
+            var factory = new ConnectionFactory { HostName = "localhost" };
+            using var connection1 = factory.CreateConnection();
+            using var channel = connection1.CreateModel();
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            channel.QueueDeclare(queue: "accounts-transactions",
+                                durable: true,
+                                exclusive: false,
+                                autoDelete: false,
+                                arguments: null);
+
+            var transaction = model;
+            var json = JsonConvert.SerializeObject(transaction);
+            var body = Encoding.UTF8.GetBytes(json);
+            channel.BasicPublish(exchange: "",
+                                 routingKey: "accounts-transactions",
+                                 basicProperties: null,
+                                 body: body);
         }
     }
 }
