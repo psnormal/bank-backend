@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import API from '../../api/api';
-import { IHistory } from '../../api/types';
+import { IOperation } from '../../api/types';
 import { userAccounts, userInfo } from '../../constData/constData';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
@@ -15,15 +15,15 @@ const HistoryOperationAccounts: React.FC = () => {
     const [connect, setConnect] = useState<HubConnection>();
     const [numberAccount, setNumberAccount] = useState<number>();
     const [showInfo, setShowInfo] = useState<boolean>(false);
-    const [history, setHistory] = useState<IHistory>();
+    const [history, setHistory] = useState<IOperation[]>();
 
     const startSocketAndJoinToAccountHistory = async (connection: HubConnection, numberAccount: number) => {
         await connection.start();
-        await connection.invoke("JoinToAccountHistory", numberAccount);
+        await connection.invoke("JoinToAccountHistory", numberAccount.toString());
     }
 
     const joinToAccountHistory = (stateConnection: string, userId: string, numberAccount: number) => {
-        return (dispatch: (arg0: any) => void) => {
+
             if (stateConnection === '') {
                 try {
                     const connection = new HubConnectionBuilder()
@@ -36,22 +36,22 @@ const HistoryOperationAccounts: React.FC = () => {
                     });
     
                     connection.on("GetOperations", (data) => {
-                        dispatch(setHistory(data.operations))
+                        setHistory(data.operations);
                     })
     
                     connection.onclose(e => {
-                        dispatch(setConnect(connection))
+                        setConnect(connection);
                     });
     
                     startSocketAndJoinToAccountHistory(connection, numberAccount)
                         .then(() => {
-                            API.getHistory(userId, numberAccount)
+                            API.getHistory(userId, numberAccount);
                         });
     
-                    dispatch(setConnect(connection))
+                    setConnect(connection);
                 } catch (e) { console.log(e) }
             }
-        }
+
     }
 
     const closeConnection = async () => {
@@ -120,7 +120,7 @@ const HistoryOperationAccounts: React.FC = () => {
                 style={{ background: '#DCDCDC', borderWidth: 2, marginBlock: '10px', padding: '5px', borderRadius: 5 }}
             >Скрыть</button>)}
             {showInfo && (<p style={{ margin: '0px' }}>Номер счета: {numberAccount}</p>)}
-            {showInfo && (history?.operations.map(item => {
+            {showInfo && (history?.map(item => {
                 return (<p style={{ margin: '0px'}}>Дата операции: {item.dateTime}, сумма: {item.transactionAmount}, 
                     {(item.senderAccountNumber !== 0 && item.recipientAccountNumber !== 0) ? <>счет отправителя: {item.senderAccountNumber}, счет получателя: {item.recipientAccountNumber}</>: undefined}</p>)
             }))}

@@ -66,8 +66,8 @@ class API{
 
     //GET история операций по счету
     async getHistory(userId: string, id: number){
-        const res = await fetch(this.core + `api/account/${id}/operations?UserID=${userId}`).then(response => 
-            response.json()
+        const res = await fetch(this.core + `api/account/${id}/operations?UserID=${userId}`).then(response => { }
+           /* response.json()*/
         );
         return res;
     };
