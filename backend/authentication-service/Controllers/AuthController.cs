@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace authentication_service.Controllers
 {
-    /*[Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AuthController : Controller
     {
@@ -16,57 +16,6 @@ namespace authentication_service.Controllers
         public AuthController(IAuthService service)
         {
             _authService = service;
-        }
-
-        [HttpPost]
-        [Route("check")]
-        public IActionResult CheckAccess(AccessForRoles model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-            //Console.WriteLine(User.Identity.Name);
-            ClaimsPrincipal claimUser = HttpContext.User;
-            if (!claimUser.Identity.IsAuthenticated)
-            {
-                Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAbbbbbbbbbbbbbbbbbbbb");
-                return Unauthorized();
-            }
-            var isClient = claimUser.HasClaim(ClaimTypes.Role, "Client");
-            var isEmployee = claimUser.HasClaim(ClaimTypes.Role, "Employee");
-
-            if (model.IsForClient == true && model.IsForEmployee == true)
-            {
-                if (isEmployee == true || isClient == true)
-                {
-                    return Ok();
-                }
-                else return Unauthorized();
-            }
-
-            else if (model.IsForEmployee == true && model.IsForClient == false)
-            {
-                if (isEmployee == true)
-                {
-                    return Ok();
-                }
-                else return Unauthorized();
-            }
-
-            else if (model.IsForEmployee == false && model.IsForClient == true)
-            {
-                if (isClient == true)
-                {
-                    return Ok();
-                }
-                else return Unauthorized();
-            }
-
-            else
-            {
-                return Unauthorized();
-            }
         }
 
         [HttpPost]
@@ -92,5 +41,5 @@ namespace authentication_service.Controllers
                 return StatusCode(500, "Something went wrong");
             }
         }
-    }*/
+    }
 }
