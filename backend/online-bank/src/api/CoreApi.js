@@ -35,9 +35,6 @@ export const CoreApi = {
     getAccountOperations(userId, accountId) {
         return coreInstanse.get(`account/${accountId}/operations?UserID=${userId}`)
             .then(response => {
-                /*if (response.status === 200) {
-                    return response.data;
-                }*/
             })
             .catch(error => {
                /* return {
