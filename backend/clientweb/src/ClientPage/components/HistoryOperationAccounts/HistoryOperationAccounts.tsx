@@ -23,7 +23,6 @@ const HistoryOperationAccounts: React.FC = () => {
     }
 
     const joinToAccountHistory = (stateConnection: string, userId: string, numberAccount: number) => {
-
             if (stateConnection === '') {
                 try {
                     const connection = new HubConnectionBuilder()
@@ -85,8 +84,6 @@ const HistoryOperationAccounts: React.FC = () => {
         setTitle(titleData.second + numberAccount);
 
         if (numberAccount) {
-            //const result = await API.getHistory(userInfo.userId, numberAccount);
-            //setHistory(result);
             joinToAccountHistory('', userInfo.userId, numberAccount);
         }
         else {
