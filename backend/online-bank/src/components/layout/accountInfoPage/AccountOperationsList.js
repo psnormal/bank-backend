@@ -16,7 +16,7 @@ function AccountOperationsList(props) {
                             <ListGroup>
                                 {
                                     props.operations.map((operation, index) => {
-                                        return <OperationItem operation={operation} key={index} />
+                                        return <OperationItem operation={operation} clientAccountsNums={props.clientAccountsNums} key={index} />
                                     })
                                 }
                             </ListGroup>

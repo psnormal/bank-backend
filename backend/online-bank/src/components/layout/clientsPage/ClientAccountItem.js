@@ -5,7 +5,7 @@ import { ListGroup, Container, Row, Col, Nav} from 'react-bootstrap';
 function ClientAccountItem(props) {
     return (
         <>
-            <Nav.Link as={Link} to={`/account/${props.account.accountNumber}/1/${props.userId}`}>
+            <Nav.Link as={Link} to={`/account/${props.account.accountNumber}/${props.userId}`}>
                 <ListGroup.Item className="px-6 py-3">
                     <Container>
                         <Row className="justify-content-between">

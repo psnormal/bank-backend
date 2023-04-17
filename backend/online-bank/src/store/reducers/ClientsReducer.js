@@ -1,5 +1,6 @@
 import { UserApi } from "../../api/UserApi";
 import { CoreApi } from "../../api/CoreApi";
+import { CreditApi } from "../../api/CreditApi";
 
 const SET_CLIENTS = 'SET_CLIENTS';
 const UPDATE_NEW_CLIENT = 'UPDATE_NEW_CLIENT';
@@ -95,9 +96,12 @@ export const blockAnClientThunkCreator = (clientId) => {
         UserApi.blockUser(clientId)
             .then(() => {
                 UserApi.getAllUsers()
-                    .then(data => {
-                        data = data.filter(client => client.role == 0)
-                        dispatch(setClientsActionCreator(data));
+                    .then(allUsers => {
+                        let allClients = allUsers.filter(user => user.role == 0);
+                        connectClientsAndAccounts(allClients)
+                            .then(allClientsWithAccounts => {
+                                dispatch(setClientsActionCreator(allClientsWithAccounts));
+                            })
                     })
             })
     }
@@ -109,9 +113,12 @@ export const createNewClientThunkCreator = (newClient) => {
             .then(() => {
                 dispatch(clearNewClientActionCreator())
                 UserApi.getAllUsers()
-                    .then(data => {
-                        data = data.filter(client => client.role == 0)
-                        dispatch(setClientsActionCreator(data));
+                    .then(allUsers => {
+                        let allClients = allUsers.filter(user => user.role == 0);
+                        connectClientsAndAccounts(allClients)
+                            .then(allClientsWithAccounts => {
+                                dispatch(setClientsActionCreator(allClientsWithAccounts));
+                            })
                     })
             })
     }

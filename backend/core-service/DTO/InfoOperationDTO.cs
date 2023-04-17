@@ -7,6 +7,8 @@ namespace core_service.DTO
     {
         [Required]
         public int AccountNumber { get; set; }
+        public int SenderAccountNumber { get; set; }
+        public int RecipientAccountNumber { get; set; }
         [Required]
         public DateTime DateTime { get; set; }
         [Required]
@@ -15,6 +17,8 @@ namespace core_service.DTO
 
         public InfoOperationDTO(Operation model)
         {
+            SenderAccountNumber = model.SenderAccountNumber;
+            RecipientAccountNumber = model.RecipientAccountNumber;
             AccountNumber = model.AccountNumber;
             DateTime = model.DateTime;
             TransactionAmount = model.TransactionAmount;

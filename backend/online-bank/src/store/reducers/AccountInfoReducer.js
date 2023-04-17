@@ -1,35 +1,39 @@
 import { CoreApi } from "../../api/CoreApi";
+import { HubConnectionBuilder} from "@microsoft/signalr";
 
+const SET_CONNECTION = 'SET_CONNECTION';
 const SET_ACCOUNT_INFO = 'SET_ACCOUNT_INFO';
-const SET_OPERATIONS_AND_PAGE_INFO = 'SET_OPERATIONS_AND_PAGE_INFO';
+const SET_OPERATIONS = 'SET_OPERATIONS';
 const SET_USER_ID = 'SET_USER_ID';
-const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
+const SET_CLIENT_ACCOUNTS = 'SET_CLIENT_ACCOUNTS'
 
 let initialState = {
+    connection: '',
     userId : '',
     account : {},
-    operations : [],
-    pageInfo: {
-        pageSize: 5,
-        pageCount: 0,
-        currentPage : 1
-    }
-
+    operations: [],
+    clientAccounts: []
 }
 
 const AccountInfoReducer = (state = initialState, action) => {
     switch (action.type) {
+        case SET_CONNECTION: {
+            return {
+                ...state,
+                connection: action.connection
+            }
+        }
         case SET_ACCOUNT_INFO : {
             return {
                 ...state,
                 account: action.account
             }
         }
-        case SET_OPERATIONS_AND_PAGE_INFO : {
+        case SET_OPERATIONS: {
+            let operationsWithTypes = defineOperationTypes(action.operations, state.clientAccounts);
             return {
                 ...state,
-                operations : action.operations,
-                pageInfo: action.pageInfo
+                operations: operationsWithTypes
             }
         }
         case SET_USER_ID: {
@@ -38,10 +42,10 @@ const AccountInfoReducer = (state = initialState, action) => {
                 userId: action.userId
             }
         }
-        case SET_CURRENT_PAGE: {
+        case SET_CLIENT_ACCOUNTS: {
             return {
                 ...state,
-                pageInfo: { ...state.pageInfo, currentPage: action.pageNumber}
+                clientAccounts: action.clientAccounts
             }
         }
         default:
@@ -49,39 +53,62 @@ const AccountInfoReducer = (state = initialState, action) => {
     }
 }
 
+const defineOperationTypes = (operations, clientAccounts) => {
+    operations.map(operation => {
+        if (operation.senderAccountNumber === 0 && operation.recipientAccountNumber === 0) {
+            operation.transactionAmount >= 0 ? operation.type = "Р’РЅРµСЃРµРЅРёРµ СЃСЂРµРґСЃС‚РІ" : operation.type = "РЎРїРёСЃР°РЅРёРµ СЃСЂРµРґСЃС‚РІ";
+        }
+        else if (operation.senderAccountNumber !== 0 && operation.recipientAccountNumber === 0) {
+            clientAccounts.includes(operation.senderAccountNumber) ? operation.type = "РњРµР¶РґСѓ СЃРІРѕРёРјРё СЃС‡РµС‚Р°РјРё" : operation.type = "Р’С…РѕРґСЏС‰РёР№ РїРµСЂРµРІРѕРґ";
+        }
+        else if (operation.senderAccountNumber === 0 && operation.recipientAccountNumber !== 0) {
+            clientAccounts.includes(operation.recipientAccountNumber) ? operation.type = "РњРµР¶РґСѓ СЃРІРѕРёРјРё СЃС‡РµС‚Р°РјРё" : operation.type = "РџРµСЂРµРІРѕРґ РєР»РёРµРЅС‚Сѓ Р±Р°РЅРєР°";
+        }
+        else
+            operation.type = "Р‘Р°РЅРєРѕРІСЃРєР°СЏ РѕРїРµСЂР°С†РёСЏ";
+    })
+    return operations
+}
+
 // ACTIONS
-// Обновить информацию об аккаунте
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+export const setConnectionActionCreator = (connection) => {
+    return {
+        type: SET_CONNECTION,
+        connection: connection
+    }
+};
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const setAccountInfoActionCreator = (account) => {
     return {
         type: SET_ACCOUNT_INFO,
         account: account
     }
 };
-// Обновить информацию об операциях счета и пагинации
-export const setOperationsAndPageInfoActionCreator = (operations, pageInfo) => {
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+export const setOperationsInfoActionCreator = (operations) => {
     return {
-        type: SET_OPERATIONS_AND_PAGE_INFO,
-        operations: operations,
-        pageInfo: pageInfo
+        type: SET_OPERATIONS,
+        operations: operations
     }
 };
-// Обновить информацию id пользователя
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ id пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const setAccountUserIdActionCreator = (userId) => {
     return {
         type: SET_USER_ID,
         userId: userId
     }
 };
-// Обновить текущую страницу
-export const setCurrentPageActionCreator = (pageNumber) => {
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+export const setClientAccountsActionCreator = (accounts) => {
     return {
-        type: SET_CURRENT_PAGE,
-        pageNumber: pageNumber
+        type: SET_CLIENT_ACCOUNTS,
+        clientAccounts: accounts
     }
 };
 
 // THUNKS
-// Получить информацию об аккаунте с сервера
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 export const getAccountInfoThunkCreator = (userId, accountId) => {
     return (dispatch) => {
         CoreApi.getUserAccountInfo(userId, accountId)
@@ -90,13 +117,52 @@ export const getAccountInfoThunkCreator = (userId, accountId) => {
             })
     }
 }
-// Получить информацию об операциях счета и пагинации с сервера
-export const getOperationsAndPageInfoThunkCreator = (userId, accountId, pageNumber) => {
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+export const getClientAccountsThunkCreator = (userId) => {
     return (dispatch) => {
-        CoreApi.getAccountOperations(userId, accountId, pageNumber)
+        CoreApi.getAllUserAccounts(userId)
             .then(data => {
-                dispatch(setOperationsAndPageInfoActionCreator(data.operations, data.pageInfo));
+                let clientAccounts = [...data.accounts];
+                let clientAccountsNumbers = clientAccounts.map(clientAccount => clientAccount.accountNumber);
+                dispatch(setClientAccountsActionCreator(clientAccountsNumbers)); 
             })
+    }
+}
+
+// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+const startSocketAndJoinToAccountHistory = async (connection, accNum) => {
+    await connection.start();
+    await connection.invoke("JoinToAccountHistory", accNum);
+}
+export const joinToAccountHistory = (stateConnection, userId, accountNumber) => {
+    return (dispatch) => {
+        if (stateConnection === '') {
+            try {
+                const connection = new HubConnectionBuilder()
+                    .withUrl("https://localhost:7139/operations")
+                    .withAutomaticReconnect()
+                    .build();
+
+                connection.on("ReceiveMessage", (message) => {
+                    console.log(message);
+                });
+
+                connection.on("GetOperations", (data) => {
+                    dispatch(setOperationsInfoActionCreator(data.operations))
+                })
+
+                connection.onclose(e => {
+                    dispatch(setConnectionActionCreator(''))
+                });
+
+                startSocketAndJoinToAccountHistory(connection, accountNumber)
+                    .then(() => {
+                        CoreApi.getAccountOperations(userId, accountNumber)
+                    });
+
+                dispatch(setConnectionActionCreator(connection))
+            } catch (e) { console.log(e) }
+        }
     }
 }
 

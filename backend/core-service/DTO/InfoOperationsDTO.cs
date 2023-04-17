@@ -6,7 +6,7 @@ namespace core_service.DTO
     {
         [Required]
         public List<InfoOperationDTO> Operations { get; set; }
-        [Required]
-        public PageInfoDTO PageInfo { get; set; }
+        /*[Required]
+        public PageInfoDTO PageInfo { get; set; }*/
     }
 }
