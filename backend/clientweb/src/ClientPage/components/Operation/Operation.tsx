@@ -3,67 +3,32 @@ import API from '../../api/api';
 import { userInfo } from '../../constData/constData';
 
 const Operation: React.FC = () => {
-    const [numberAccount, setNumberAccount] = useState<string>();
-    const [transactionAmount, setTransactionAmount] = useState<string>();
-
-    //var amqp = require('amqplib/callback_api');
+    const [numberAccount, setNumberAccount] = useState<number>();
+    const [transactionAmount, setTransactionAmount] = useState<number>();
     
     const plusMoney = async () => {
          const date = (new Date()).toISOString();
          if (numberAccount && transactionAmount) {
-             await API.createOperation(userInfo.userId, parseInt(numberAccount), date, parseInt(transactionAmount));
+             await API.createOperation(userInfo.userId, numberAccount, date, transactionAmount);
              setNumberAccount(undefined);
              setTransactionAmount(undefined);
          }
-
-        /*amqp.connect('amqp://localhost', function(error0: any, connection: any) {
-            if (error0) {
-                throw error0;
-            }
-            connection.createChannel(function(error1: any, channel: any) {
-                if (error1) {
-                    throw error1;
-                }
-                var queue = 'accounts-operations';
-                var msg = {
-                    userID: userInfo.userId,
-                    accountNumber: numberAccount,
-                    dateTime: (new Date()).toISOString(),
-                    transactionAmount: transactionAmount,
-                } || "Hello World!";
-        
-                channel.assertQueue(queue, {
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null,
-                });
-                channel.sendToQueue(queue, Buffer.isBuffer(msg), {
-                    persistent: true
-                });
-                console.log(msg);
-            });
-            setTimeout(function() {
-                connection.close();
-                process.exit(0);
-            }, 500);
-        });*/
     };
 
     const minusMoney = async () => {
         const date = (new Date()).toISOString();
         if (numberAccount && transactionAmount) {
-            await API.createOperation(userInfo.userId, parseInt(numberAccount), date, -parseInt(transactionAmount));
+            await API.createOperation(userInfo.userId, numberAccount, date, -transactionAmount);
             setNumberAccount(undefined);
             setTransactionAmount(undefined);
         }
     };
 
-    const onChangeNumberAccount = useCallback((value: string) => {
+    const onChangeNumberAccount = useCallback((value: number) => {
         setNumberAccount(value);
     }, []);
 
-    const onChangeTransactionAmount = useCallback((value: string) => {
+    const onChangeTransactionAmount = useCallback((value: number) => {
         setTransactionAmount(value);
     }, []);
 
@@ -71,21 +36,21 @@ const Operation: React.FC = () => {
         return (
             <>
                 <input 
-                    type='text'
+                    type='number'
                     title='Введите номер счета'
                     value={numberAccount} 
                     onChange={(event) => {
-                        onChangeNumberAccount(event.target.value);
+                        onChangeNumberAccount(event.target.value as unknown as number);
                     }}
                     placeholder='Введите номер счета'
                     style={{ marginRight: '10px', marginBlock: '10px', padding: '5px' }}
                 />
                 <input 
-                    type='text'
+                    type='number'
                     title='Введите сумму'
                     value={transactionAmount} 
                     onChange={(event) => {
-                        onChangeTransactionAmount(event.target.value);
+                        onChangeTransactionAmount(event.target.value as unknown as number);
                     }}
                     placeholder='Введите сумму'
                     style={{ marginRight: '10px', marginBlock: '10px', padding: '5px' }}
@@ -99,11 +64,13 @@ const Operation: React.FC = () => {
             <p style={{ margin: '0px' }}>Операции по счету</p>
             {inputBlock}
             <button 
+                disabled={!numberAccount || !transactionAmount}
                 onClick={plusMoney} 
                 title='Внести деньги'
                 style={{ background: '#87CEFA', borderWidth: 2, marginRight: '10px', marginBlock: '10px', padding: '5px', borderRadius: 5 }}
             >Внести деньги</button>
             <button 
+                disabled={!numberAccount || !transactionAmount}
                 onClick={minusMoney} 
                 title='Снять деньги'
                 style={{ background: '#87CEFA', borderWidth: 2, marginBlock: '10px', padding: '5px', borderRadius: 5 }}

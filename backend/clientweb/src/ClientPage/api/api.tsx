@@ -6,6 +6,8 @@ class API{
     
     credit = 'https://localhost:7239/';
 
+    proxy = 'https://localhost:7139/';
+
     //GET информация о кредитах
     getCreditRates(){
         const res = fetch(this.credit + `api/CreditRate/AllCreditRates`).then(response => 
@@ -82,8 +84,8 @@ class API{
         return res;
 	}
 
-     //POST создать операцию
-     async createOperation(userId: string, accountNumber: number, date: string, transactionAmount: number){
+    //POST создать операцию
+    async createOperation(userId: string, accountNumber: number, date: string, transactionAmount: number){
         const body = {
             userID: userId,
             accountNumber: accountNumber,
@@ -91,9 +93,24 @@ class API{
             transactionAmount: transactionAmount,
         };
         const blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-        const res = await fetch(this.core + 'api/operation/create', { method: 'post', body: blob }).then(response => response.json());
+        const res = await fetch(this.proxy + 'api/operation/create', { method: 'post', body: blob }).then(response => response.json());
         console.log(blob);
-        //return res;
+        return res;
+	}
+
+    //POST создать транзакцию
+    async createTransaction(userId: string, senderAccountNumber: number, recipientAccountNumber: number, date: string, transactionAmount: number){
+        const body = {
+            userID: userId,
+            senderAccountNumber: senderAccountNumber,
+            recipientAccountNumber: recipientAccountNumber,
+            dateTime: date,
+            transactionAmount: transactionAmount,
+        };
+        const blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
+        const res = await fetch(this.proxy + 'api/transaction/create', { method: 'post', body: blob }).then(response => response.json());
+        console.log(blob);
+        return res;
 	}
 
     //POST взять кредит
@@ -112,7 +129,6 @@ class API{
 		const res = await fetch(this.core + `api/account/${id}/edit?UserID=${userId}&accountState=${state}`, {method: 'put' }).then(res=>res.json());
         return res;
 	}
-
 
 }
 
