@@ -2,9 +2,9 @@
 
 namespace authentication_service.Storage
 {
-    public class Role
+    public class Role : IdentityRole<Guid>
     {
-        public Guid RoleId { get; set; }
-        public RoleType Type { get; set; }
+        /*public Guid RoleId { get; set; }
+        public RoleType Type { get; set; }*/
     }
 }

@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 namespace authentication_service.Services
 {
-    public class AccessService : IAccessService
+    /*public class AccessService : IAccessService
     {
         private readonly ApplicationDbContext _context;
 
@@ -86,5 +86,5 @@ namespace authentication_service.Services
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             return claimsIdentity;
         }
-    }
+    }*/
 }
