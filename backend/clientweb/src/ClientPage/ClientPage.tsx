@@ -9,6 +9,7 @@ import ClosedAccount from './components/ClosedAccount/ClosedAccount';
 import Operation from './components/Operation/Operation';
 import CreditRating from './components/CreditRating/CreditRating';
 import CreditDebts from './components/CreditDebts/CreditDebts';
+import Transaction from './components/Transaction/Transaction';
 
 const ClientPage: React.FC = () => {
     return (
@@ -19,6 +20,7 @@ const ClientPage: React.FC = () => {
             <CreateAccount/>
             <ClosedAccount/>
             <Operation/>
+            <Transaction/>
             <HistoryOperationAccounts />
             <CreditRating />
             <Credit/>

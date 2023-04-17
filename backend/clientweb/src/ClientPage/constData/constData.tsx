@@ -1,6 +1,6 @@
 export const userInfo = {
     fio: 'Иванов Иван Иванович', 
-    userId: '733594c4-3167-47b0-2bb0-08db1e40fb2e'
+    userId: '3d7142f6-7fc0-4f89-b256-6998b105e554'
 };
 
 export const userAccounts = {

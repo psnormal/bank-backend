@@ -23,17 +23,17 @@ const ClosedAccount: React.FC = () => {
     const [balanceAccount, setBalanceAccount] = useState<number>();
 
 
-    const onChange = useCallback((value: string) => {
-        setNumberAccount(parseInt(value));
+    const onChange = useCallback((value: number) => {
+        setNumberAccount(value);
     }, []);
 
     const inputBlock = useMemo(() => {
         return (
             <input 
-                type='text'
+                type='number'
                 value={numberAccount} 
                 onChange={(event) => {
-                    onChange(event.target.value);
+                    onChange(event.target.value as unknown as number);
                 }}
                 placeholder='Введите номер'
                 style={{ marginRight: '10px', marginBlock: '10px', padding: '5px' }}
@@ -73,12 +73,12 @@ const ClosedAccount: React.FC = () => {
         setTitle(titleData.first);
     };
 
-    console.log(title);
     return (
         <blockquote style={{ background: '#FFFFFF', border: 'solid', borderColor: '#000080', padding: '10px', marginTop: '10px' }}>
             <p style={{ margin: '0px' }}>{title}</p>
             {(title === titleData.first) && (inputBlock)}
             {title === titleData.first && (<button 
+                disabled={!numberAccount}
                 onClick={close} 
                 title={titleBtnData.first}
                 style={{ background: '#87CEFA', borderWidth: 2, marginRight: '10px', marginBlock: '10px', padding: '5px', borderRadius: 5 }}

@@ -10,6 +10,8 @@ export interface IOperation {
     dateTime: string,
     transactionAmount: number,
     transactionFee: number,
+    senderAccountNumber: number,
+    recipientAccountNumber: number,
 }
 
 export interface IHistory {
