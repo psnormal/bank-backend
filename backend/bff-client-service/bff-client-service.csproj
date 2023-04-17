@@ -14,9 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="DTO\" />
+    <None Remove="AccountDTO\" />
+    <None Remove="CreditDTO\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DTO\" />
+    <Folder Include="AccountDTO\" />
+    <Folder Include="CreditDTO\" />
   </ItemGroup>
 </Project>

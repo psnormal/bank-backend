@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using bff_client_service.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 
@@ -12,7 +13,7 @@ using RabbitMQ.Client;
 
 namespace bff_client_service.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     public class OperationController : Controller
     {
 
@@ -63,6 +64,9 @@ namespace bff_client_service.Controllers
                                  basicProperties: null,
                                  body: body);
         }
+
+
+
     }
 }
 
