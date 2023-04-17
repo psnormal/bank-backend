@@ -22,8 +22,9 @@ const ClientPage: React.FC = () => {
             <Operation/>
             <Transaction/>
             <HistoryOperationAccounts />
-           
-            
+            <CreditRating />
+            <Credit/>
+            <CreditDebts/>
         </>
     );
 }
