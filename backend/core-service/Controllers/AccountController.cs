@@ -4,6 +4,7 @@ using core_service.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace core_service.Controllers
 {
@@ -20,6 +21,7 @@ namespace core_service.Controllers
 
         [HttpPost]
         [Route("account/create")]
+        //[Authorize(Roles = "Client")]
         public async Task<ActionResult<InfoAccountDTO>> CreateAccount(CreateAccountDTO model)
         {
             if (!ModelState.IsValid)
@@ -40,6 +42,7 @@ namespace core_service.Controllers
 
         [HttpGet]
         [Route("account/{id}")]
+        //[Authorize(Roles = "Client, Employee")]
         public ActionResult<InfoAccountDTO> GetAccount(Guid UserID, int id)
         {
             if (!ModelState.IsValid)
@@ -63,6 +66,7 @@ namespace core_service.Controllers
 
         [HttpPut]
         [Route("account/{id}/edit")]
+        //[Authorize(Roles = "Client, Employee")]
         public async Task<ActionResult<InfoAccountDTO>> EditAccount(Guid UserID, int id, AccountState accountState)
         {
             if (!ModelState.IsValid)
@@ -83,7 +87,7 @@ namespace core_service.Controllers
 
         [HttpGet]
         [Route("accounts/all")]
-        //[Authorize(Roles = "Employee")]
+        //[Authorize(Roles = "Client, Employee")]
         public ActionResult<InfoAccountsDTO> GetAllUserAccounts(Guid UserID)
         {
             if (!ModelState.IsValid)
