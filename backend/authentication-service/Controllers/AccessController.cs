@@ -3,7 +3,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using authentication_service.Models;
-using authentication_service.Services;
+using authentication_service.Storage;
+using Duende.IdentityServer.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace authentication_service.Controllers
 {
@@ -15,8 +17,17 @@ namespace authentication_service.Controllers
             _accessService = service;
         }*/
 
+        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly IIdentityServerInteractionService _interactionService;
+
+        public AccessController(SignInManager<User> signInManager, UserManager<User> userManager,
+            IIdentityServerInteractionService interactionService) =>
+            (_signInManager, _userManager, _interactionService) =
+            (signInManager, userManager, interactionService);
+
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
             /*ClaimsPrincipal claimUser = HttpContext.User;
 
@@ -33,10 +44,14 @@ namespace authentication_service.Controllers
                 else return View("Selection");
             }*/
 
-            return View();
+            var viewModel = new LoginViewModel
+            {
+                ReturnUrl = returnUrl
+            };
+            return View(viewModel);
         }
 
-        /*[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -44,7 +59,23 @@ namespace authentication_service.Controllers
                 return BadRequest();
             }
 
-            try
+            var user = await _userManager.FindByNameAsync(model.Login);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "User not found");
+                return View(model);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(model.Login,
+                model.Password, false, false);
+            if (result.Succeeded)
+            {
+                return Redirect(model.ReturnUrl);
+            }
+            ModelState.AddModelError(string.Empty, "Login error");
+            return View(model);
+
+            /*try
             {
                 var identity = _accessService.Login(model);
 
@@ -74,8 +105,8 @@ namespace authentication_service.Controllers
                     return StatusCode(400, "Auth failed: " + e.Message);
                 }
                 return StatusCode(500, "Something went wrong");
-            }
-        }*/
+            }*/
+        }
 
         /*[HttpPost]
         [Route("[controller]/[action]")]

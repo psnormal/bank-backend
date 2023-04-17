@@ -11,6 +11,7 @@
     <div class="row justify-content-start">
         <div class="col-md-6 offset-md-3">
             <form asp-controller="Access" asp-action="Login" method="post">
+                <input type="hidden" asp-for="ReturnUrl" />
                 <div class="mb-3">
                     <label for="InputLogin" class="form-label">Login</label>
                     <input type="text" class="form-control" id="InputLogin" asp-for="Login">

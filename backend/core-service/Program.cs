@@ -8,6 +8,7 @@ using System.Text;
 using core_service.DTO;
 using Newtonsoft.Json;
 using core_service.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 //RabbitMQ connection
 var factory = new ConnectionFactory { HostName = "localhost" };
@@ -95,9 +96,18 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(
-    CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie();
+builder.Services.AddAuthentication(config =>
+{
+    config.DefaultAuthenticateScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:7290";
+                    options.Audience = "WebAPI";
+                    options.RequireHttpsMetadata = false;
+                });
 
 var app = builder.Build();
 
@@ -117,6 +127,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001", "https://localhost:7139/operations").AllowCredentials());
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

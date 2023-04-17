@@ -2,6 +2,7 @@
 using Duende.IdentityServer;
 using IdentityModel;
 using System.Security.Claims;
+using authentication_service.Storage;
 
 namespace authentication_service
 {
@@ -18,17 +19,19 @@ namespace authentication_service
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResource
+                /*new IdentityResource
                 {
                     Name = "role",
                     UserClaims = new List<string> {"role"}
-                },
+                },*/
                 new IdentityResource()
                 {
                     Name = ClaimTypes.Role,
                     UserClaims = new List<string>
                         {
                             JwtClaimTypes.Role,
+                            JwtClaimTypes.Name,
+                            JwtClaimTypes.Id
                         }
                 }
             };
@@ -48,7 +51,7 @@ namespace authentication_service
                     DisplayName = "WebAPI",
                     Description = "Allow the application to access WebAPI",
                     Scopes = new List<string> {"WebAPI"},
-                    UserClaims = new List<string> { JwtClaimTypes.Role },
+                    UserClaims = new List<string> { JwtClaimTypes.Role, JwtClaimTypes.Name, JwtClaimTypes.Id },
                     ApiSecrets = new List<Secret> {new Secret("string123".Sha256())},
                 }
             };
@@ -58,8 +61,8 @@ namespace authentication_service
             {
                 new Client
                 {
-                    ClientId = "notes-web-app",
-                    ClientName = "Notes Web",
+                    ClientId = "client-web-app",
+                    ClientName = "Client Web",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequireClientSecret = true,
                     ClientSecrets = {new Secret("string123".Sha256())},

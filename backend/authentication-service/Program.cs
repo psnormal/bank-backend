@@ -22,12 +22,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 
 builder.Services.AddCors();
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(
+/*builder.Services.AddAuthentication(
     CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(option => {
         option.LoginPath = "/Access/Login";
         option.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-    });
+    });*/
 
 builder.Services.AddIdentity<User, Role>(option => {
     option.SignIn.RequireConfirmedAccount = false;
@@ -50,6 +50,14 @@ builder.Services.AddIdentityServer()
                 .AddInMemoryApiScopes(Configuration.ApiScopes)
                 .AddInMemoryClients(Configuration.Clients)
                 .AddDeveloperSigningCredential();
+
+builder.Services.ConfigureApplicationCookie(options => {
+    options.Cookie.Name = "Auth.Identity.Cookie";
+    options.LoginPath = "/Access/Login";
+    options.LogoutPath = "/Access/Logout";
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
 
 var app = builder.Build();
 
@@ -75,6 +83,8 @@ app.UseAuthorization();
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001", "https://localhost:7139"));
 app.UseRouting();
 app.UseIdentityServer();
+
+await app.ConfigureIdentityAsync();
 
 app.MapControllerRoute(
     name: "default",

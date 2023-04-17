@@ -83,6 +83,7 @@ namespace core_service.Controllers
 
         [HttpGet]
         [Route("accounts/all")]
+        [Authorize(Roles = "Employee")]
         public ActionResult<InfoAccountsDTO> GetAllUserAccounts(Guid UserID)
         {
             if (!ModelState.IsValid)
