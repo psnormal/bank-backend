@@ -22,7 +22,7 @@ const UserAccounts: React.FC = () => {
                 const accounts = await API.getAccountsAll(userInfo.userId);
                 setOpenAccounts(accounts.accounts.filter((item: IAccount) => item.state === 0));
                 setClosedAccounts(accounts.accounts.filter((item: IAccount) => item.state === 1));
-            }, 3000);
+            }, 10000);
         }
     });
 

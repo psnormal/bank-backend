@@ -10,9 +10,9 @@ const Transaction: React.FC = () => {
     const plusMoney = async () => {
          const date = (new Date()).toISOString();
         if (senderAccountNumber && transactionAmount && recipientAccountNumber) {
-             await API.createTransaction(userInfo.userId, senderAccountNumber, recipientAccountNumber, date, transactionAmount);
              setSenderNumberAccount(undefined);
              setTransactionAmount(undefined);
+             await API.createTransaction(userInfo.userId, senderAccountNumber, recipientAccountNumber, date, transactionAmount);
          }
     };
 

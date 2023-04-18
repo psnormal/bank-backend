@@ -93,7 +93,11 @@ class API{
             transactionAmount: transactionAmount,
         };
         const blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-        const res = await fetch(this.proxy + 'api/Operation/operation/create', { method: 'post', body: blob }).then(response => response.json());
+        const res = await fetch(this.proxy + 'api/operation/create', { method: 'post', body: blob }).then(response => {
+            if (response.status === 400) {
+                alert("Not enough money");
+            }
+        });
         console.log(blob);
         return res;
 	}
@@ -108,7 +112,11 @@ class API{
             transactionAmount: transactionAmount,
         };
         const blob = new Blob([JSON.stringify(body, null, 2)], {type : 'application/json'});
-        const res = await fetch(this.proxy + 'api/Operation/transaction/create', { method: 'post', body: blob }).then(response => response.json());
+        const res = await fetch(this.proxy + 'api/transaction/create', { method: 'post', body: blob }).then(response => {
+            if (response.status === 400) {
+                alert("Not enough money");
+            }
+        });
         console.log(blob);
         return res;
 	}

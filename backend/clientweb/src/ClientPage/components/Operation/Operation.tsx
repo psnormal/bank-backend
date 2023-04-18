@@ -9,18 +9,18 @@ const Operation: React.FC = () => {
     const plusMoney = async () => {
          const date = (new Date()).toISOString();
          if (numberAccount && transactionAmount) {
-             await API.createOperation(userInfo.userId, numberAccount, date, transactionAmount);
              setNumberAccount(undefined);
              setTransactionAmount(undefined);
+             await API.createOperation(userInfo.userId, numberAccount, date, transactionAmount);
          }
     };
 
     const minusMoney = async () => {
         const date = (new Date()).toISOString();
         if (numberAccount && transactionAmount) {
-            await API.createOperation(userInfo.userId, numberAccount, date, -transactionAmount);
             setNumberAccount(undefined);
             setTransactionAmount(undefined);
+            await API.createOperation(userInfo.userId, numberAccount, date, -transactionAmount);
         }
     };
 

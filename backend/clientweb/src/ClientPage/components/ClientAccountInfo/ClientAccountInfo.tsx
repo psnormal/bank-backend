@@ -21,7 +21,7 @@ const ClientAccountInfo: React.FC = () => {
             setTimeout(async () => {
                 const accounts = await API.getAccount(userInfo.userId, numberAccount);
                 setAccount(accounts);
-            }, 3000);
+            }, 10000);
         }
     });
 
