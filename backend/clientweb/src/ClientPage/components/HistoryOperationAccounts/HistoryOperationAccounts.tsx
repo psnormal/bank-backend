@@ -99,7 +99,18 @@ const HistoryOperationAccounts: React.FC = () => {
         setNumberAccount(undefined);
         setHistory(undefined);
     }, []);
-
+    
+    const historyBlock = useMemo(() => {
+        return history?.map(item => {
+            if (item.senderAccountNumber !== 0 && item.recipientAccountNumber !== 0) {
+                return <p style={{ margin: '0px'}}>Операция с счета {item.senderAccountNumber} на счет {item.recipientAccountNumber}. Дата операции: {item.dateTime}, сумма: {item.transactionAmount}</p>
+            } else if (item.transactionAmount >= 0){
+                return <p style={{ margin: '0px'}}>Пополнение счета. Дата операции: {item.dateTime}, сумма: {item.transactionAmount}</p>
+            } else {
+                return <p style={{ margin: '0px'}}>Снятие со счета. Дата операции: {item.dateTime}, сумма: {item.transactionAmount}</p>
+            }
+        });
+    }, []);
 
     return (
         <blockquote style={{ background: '#FFFFFF', border: 'solid', borderColor: '#000080', padding: '10px' }}>
@@ -117,10 +128,7 @@ const HistoryOperationAccounts: React.FC = () => {
                 style={{ background: '#DCDCDC', borderWidth: 2, marginBlock: '10px', padding: '5px', borderRadius: 5 }}
             >Скрыть</button>)}
             {showInfo && (<p style={{ margin: '0px' }}>Номер счета: {numberAccount}</p>)}
-            {showInfo && (history?.map(item => {
-                return (<p style={{ margin: '0px'}}>Дата операции: {item.dateTime}, сумма: {item.transactionAmount}, 
-                    {(item.senderAccountNumber !== 0 && item.recipientAccountNumber !== 0) ? <>счет отправителя: {item.senderAccountNumber}, счет получателя: {item.recipientAccountNumber}</>: undefined}</p>)
-            }))}
+            {showInfo && (historyBlock)}
         </blockquote>
     );
 }
